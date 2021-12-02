@@ -1,4 +1,6 @@
 package kg.academy.maken.service;
 
-public interface ListService {
+import kg.academy.maken.entity.List;
+
+public interface ListService extends BaseService<List>{
 }

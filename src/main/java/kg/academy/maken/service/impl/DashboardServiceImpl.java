@@ -1,6 +1,7 @@
 package kg.academy.maken.service.impl;
 
 import kg.academy.maken.entity.Dashboard;
+import kg.academy.maken.entity.Status;
 import kg.academy.maken.model.DashboardModel;
 import kg.academy.maken.repository.DashboardRepository;
 import kg.academy.maken.service.DashboardService;
@@ -20,18 +21,30 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public Dashboard save(Dashboard dashboard) {
-        return null;
+        return dashboardRepository.save(dashboard);
     }
 
     @Override
     public List<Dashboard> getAll() {
-        return null;
+        return dashboardRepository.findAll();
     }
 
+    @Override
+    public Dashboard findById(Long id) {
+        return dashboardRepository.findById(id).orElse(null);
+    }
+    private Dashboard convertToEntity(DashboardModel dashboardModel){
+        return Dashboard.builder()
+                .name(dashboardModel.getName())
+                .build();
+    }
 
     @Override
     public Dashboard deleteById(Long id) {
-        return null;
+        Dashboard dashboard = findById(id);
+        if (dashboard != null)
+            dashboardRepository.deleteById(id);
+        return dashboard;
     }
 
     @Override
@@ -59,19 +72,4 @@ public class DashboardServiceImpl implements DashboardService {
         return null;
     }
 
-    @Override
-    public Dashboard findById(Long id) {
-        return dashboardRepository.findById(id).orElse(null);
-    }
-    private Dashboard convertToEntity(DashboardModel dashboardModel){
-        return Dashboard.builder()
-                .name(dashboardModel.getName())
-                .build();
-    }
-
-    private DashboardModel convertToModel(Dashboard dashboard){
-        return  DashboardModel.builder()
-                .name(dashboard.getName())
-                .build();
-    }
 }

@@ -1,7 +1,7 @@
 package kg.academy.maken.service.impl;
 
+import kg.academy.maken.entity.Dashboard;
 import kg.academy.maken.entity.User;
-import kg.academy.maken.entity.UserRole;
 import kg.academy.maken.model.UserModel;
 import kg.academy.maken.repository.UserRepository;
 import kg.academy.maken.service.UserService;
@@ -21,22 +21,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel save(UserModel userModel) {
+    public UserModel saveModel(UserModel userModel) {
         User user = convertToEntity(userModel);
         userRepository.save(user);
         return userModel;
     }
 
     @Override
-    public UserModel deleteById(Long id) {
-        User userForDelete = convertToEntity(getById(id));
+    public UserModel deleteModelById(Long id) {
+        User userForDelete = convertToEntity(getModelById(id));
         if (userForDelete != null)
             userRepository.deleteById(id);
-        return null;
+        return getModelById(id);
     }
 
     @Override
-    public UserModel getById(Long id) {
+    public UserModel getModelById(Long id) {
         User user = userRepository.findById(id).orElse(null);
         UserModel userModel = new UserModel();
         if (user != null)
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserModel> getAll() {
+    public List<UserModel> getAllModel() {
         List<User> users = userRepository.findAll();
         List<UserModel> userModels = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel update(UserModel userModel) {
+    public UserModel updateModel(UserModel userModel) {
         return null;
     }
 
@@ -74,5 +74,28 @@ public class UserServiceImpl implements UserService {
                 .password(user.getPassword())
                 .image(user.getImage().getId())
                 .build();
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User deleteById(Long id) {
+        User user = findById(id);
+        if (user != null)
+            userRepository.deleteById(id);
+        return user;
     }
 }
