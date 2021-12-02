@@ -24,7 +24,7 @@ public class Card extends BaseEntity {
     private String description;
 
     @Column(name = "admin_rating")
-    private String adminRating;
+    private Double adminRating;
 
     @ManyToOne
     @JoinColumn(name = "list_id", nullable = false)
