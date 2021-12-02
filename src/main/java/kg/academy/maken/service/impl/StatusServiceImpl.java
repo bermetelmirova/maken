@@ -24,14 +24,14 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public Status deleteById(Long id) {
-        Status status = getById(id);
+        Status status = findById(id);
         if (status != null)
             statusRepository.deleteById(id);
         return status;
     }
 
     @Override
-    public Status getById(Long id) {
+    public Status findById(Long id) {
         return statusRepository.findById(id).orElse(null);
     }
 
@@ -40,8 +40,4 @@ public class StatusServiceImpl implements StatusService {
         return statusRepository.findAll();
     }
 
-    @Override
-    public Status update(Status status) {
-        return null;
-    }
 }
