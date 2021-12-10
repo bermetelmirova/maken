@@ -3,9 +3,11 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.entity.Comment;
 import kg.academy.maken.repository.CommentRepository;
 import kg.academy.maken.service.CommentService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 

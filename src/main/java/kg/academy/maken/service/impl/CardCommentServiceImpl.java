@@ -3,12 +3,16 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.entity.CardComment;
 import kg.academy.maken.repository.CardCommentRepository;
 import kg.academy.maken.service.CardCommentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CardCommentServiceImpl implements CardCommentService {
-   private final CardCommentRepository cardCommentRepository;
+    private final CardCommentRepository cardCommentRepository;
 
+    @Autowired
     public CardCommentServiceImpl(CardCommentRepository cardCommentRepository) {
         this.cardCommentRepository = cardCommentRepository;
     }

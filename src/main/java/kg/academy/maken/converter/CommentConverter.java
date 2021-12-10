@@ -1,13 +1,10 @@
 package kg.academy.maken.converter;
 
-import kg.academy.maken.entity.Card;
 import kg.academy.maken.entity.Comment;
-import kg.academy.maken.model.CardGetModel;
 import kg.academy.maken.model.CommentModel;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
+@Component
 public class CommentConverter extends BaseConverter<CommentModel, Comment>{
     public CommentConverter() {
         super(CommentConverter::convertToEntity, CommentConverter::convertToModel);

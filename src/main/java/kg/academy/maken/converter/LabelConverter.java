@@ -4,9 +4,11 @@ import kg.academy.maken.entity.Label;
 import kg.academy.maken.entity.User;
 import kg.academy.maken.model.LabelModel;
 import kg.academy.maken.model.UserModel;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
+@Component
 public class LabelConverter extends BaseConverter<LabelModel, Label>{
 
     public LabelConverter() {

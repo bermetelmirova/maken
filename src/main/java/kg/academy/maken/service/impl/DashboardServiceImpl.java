@@ -1,22 +1,40 @@
 package kg.academy.maken.service.impl;
 
+import kg.academy.maken.converter.DashboardConverter;
 import kg.academy.maken.entity.Dashboard;
-import kg.academy.maken.entity.Status;
+import kg.academy.maken.entity.Member;
+import kg.academy.maken.entity.User;
 import kg.academy.maken.model.DashboardModel;
 import kg.academy.maken.repository.DashboardRepository;
 import kg.academy.maken.service.DashboardService;
+import kg.academy.maken.service.MemberService;
+import kg.academy.maken.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
     private final DashboardRepository dashboardRepository;
+    private final DashboardConverter dashboardConverter;
+    private final MemberService memberService;
+    private final UserService userService;
 
     @Autowired
-    public DashboardServiceImpl(DashboardRepository dashboardRepository) {
+    public DashboardServiceImpl(DashboardRepository dashboardRepository,
+                                DashboardConverter dashboardConverter, MemberService memberService,
+                                UserService userService) {
         this.dashboardRepository = dashboardRepository;
+        this.dashboardConverter = dashboardConverter;
+        this.memberService = memberService;
+        this.userService = userService;
     }
 
     @Override
@@ -33,11 +51,6 @@ public class DashboardServiceImpl implements DashboardService {
     public Dashboard findById(Long id) {
         return dashboardRepository.findById(id).orElse(null);
     }
-    private Dashboard convertToEntity(DashboardModel dashboardModel){
-        return Dashboard.builder()
-                .name(dashboardModel.getName())
-                .build();
-    }
 
     @Override
     public Dashboard deleteById(Long id) {
@@ -49,27 +62,46 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardModel saveModel(DashboardModel dashboardModel) {
-        return null;
+        Dashboard dashboard = dashboardConverter.convertFromModel(dashboardModel);
+        dashboardRepository.save(dashboard);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.getByLogin(userName);
+        memberService.save(new Member(user, dashboard, true));
+        return dashboardModel;
     }
 
     @Override
     public DashboardModel deleteModelById(Long id) {
-        return null;
+        return dashboardConverter.convertFromEntity(deleteById(id));
     }
 
     @Override
     public DashboardModel getModelById(Long id) {
-        return null;
+        return dashboardConverter.convertFromEntity(findById(id));
     }
 
     @Override
     public List<DashboardModel> getAllModel() {
-        return null;
+        List<Dashboard> dashboards = dashboardRepository.findAll();
+        return dashboards.stream()
+                .map(dashboardConverter::convertFromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<DashboardModel> getPage(Pageable pageable) {
+        Page<Dashboard> dashboards = dashboardRepository.findAll(pageable);
+        return dashboards
+                .map(dashboardConverter::convertFromEntity);
     }
 
     @Override
     public DashboardModel update(DashboardModel dashboardModel) {
-        return null;
+        Dashboard dashboardForUpdate = findById(dashboardModel.getID());
+        if (dashboardModel.getName() != null) dashboardForUpdate.setName(dashboardModel.getName());
+        dashboardRepository.save(dashboardForUpdate);
+        return dashboardConverter.convertFromEntity(dashboardForUpdate);
     }
 
 }

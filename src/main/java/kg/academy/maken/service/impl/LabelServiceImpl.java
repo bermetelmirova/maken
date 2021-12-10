@@ -3,9 +3,11 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.entity.Label;
 import kg.academy.maken.repository.LabelRepository;
 import kg.academy.maken.service.LabelService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class LabelServiceImpl implements LabelService {
     private final LabelRepository labelRepository;
 

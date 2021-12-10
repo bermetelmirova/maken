@@ -2,11 +2,13 @@ package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Card;
 import kg.academy.maken.model.CardGetModel;
+import org.springframework.stereotype.Component;
 
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class CardGetConverter extends BaseConverter<CardGetModel, Card>{
     public CardGetConverter() {
         super(CardGetConverter::convertToEntity, CardGetConverter::convertToModel);

@@ -3,9 +3,11 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.entity.Member;
 import kg.academy.maken.repository.MemberRepository;
 import kg.academy.maken.service.MemberService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 

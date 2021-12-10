@@ -3,9 +3,11 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.entity.Card;
 import kg.academy.maken.repository.CardRepository;
 import kg.academy.maken.service.CardService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 

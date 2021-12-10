@@ -13,10 +13,11 @@ public class UserConverter extends BaseConverter<UserModel, User> {
     private static UserModel convertToModel(User user) {
         if (user == null) return null;
         return UserModel.builder()
+                .ID(user.getId())
                 .login(user.getLogin())
                 .telegram(user.getTelegram())
                 .password(user.getPassword())
-                .image(user.getImage().getId())
+//                .image(user.getImage().getId())
                 .build();
     }
 

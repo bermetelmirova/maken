@@ -3,12 +3,16 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.entity.Role;
 import kg.academy.maken.repository.RoleRepository;
 import kg.academy.maken.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
+    @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }

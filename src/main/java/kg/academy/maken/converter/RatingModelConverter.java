@@ -2,7 +2,9 @@ package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Rating;
 import kg.academy.maken.model.RatingModel;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RatingModelConverter extends BaseConverter<RatingModel, Rating>{
     public RatingModelConverter() {
         super(RatingModelConverter::convertToEntity, RatingModelConverter::convertToModel);

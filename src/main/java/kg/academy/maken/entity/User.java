@@ -25,4 +25,6 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;
+
+    private Long isActive;
 }
