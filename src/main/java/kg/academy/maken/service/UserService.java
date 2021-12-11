@@ -1,10 +1,7 @@
 package kg.academy.maken.service;
 
 import kg.academy.maken.entity.User;
-import kg.academy.maken.model.UserAuthModel;
-import kg.academy.maken.model.UserModel;
-import kg.academy.maken.model.UserNameUpdate;
-import kg.academy.maken.model.UserSearch;
+import kg.academy.maken.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,6 +19,8 @@ public interface UserService extends BaseService<User> {
     UserModel updateModel(UserModel userModel);
 
     UserNameUpdate updateModel(UserNameUpdate userUpdateModel);
+
+    UserUpdatePasswordModel updateModel(UserUpdatePasswordModel userUpdatePasswordModel);
 
     User getByLogin(String login);
 

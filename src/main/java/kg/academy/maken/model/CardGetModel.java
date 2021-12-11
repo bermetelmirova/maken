@@ -18,6 +18,6 @@ public class CardGetModel {
     private Double adminRating;
     private Long listId;
     private Long labelId;
-    private List<MemberModel> members;
+    private List<DashboardMemberModel> members;
     private List<CommentModel> comments;
 }

@@ -7,9 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class MemberModel {
-    private Long ID;
-    private Long userId;
-    private Long dashboardId;
+public class DashboardAddMemberModel {
+    private Long id;
+    private String login;
 }

@@ -1,7 +1,10 @@
 package kg.academy.maken.repository;
 
-import kg.academy.maken.entity.Member;
+import kg.academy.maken.entity.DashboardMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+import java.util.Optional;
+
+public interface MemberRepository extends JpaRepository<DashboardMember, Long> {
+    Optional<DashboardMember> findByDashboard(Long id);
 }

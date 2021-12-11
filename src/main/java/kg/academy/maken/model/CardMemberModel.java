@@ -1,6 +1,6 @@
 package kg.academy.maken.model;
 
-import kg.academy.maken.entity.Member;
+import kg.academy.maken.entity.DashboardMember;
 import lombok.*;
 
 @Builder
@@ -12,5 +12,5 @@ import lombok.*;
 public class CardMemberModel {
     private Long ID;
     private Long cardId;
-    private Member memberId;
+    private DashboardMember dashboardMemberId;
 }

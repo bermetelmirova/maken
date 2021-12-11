@@ -3,16 +3,13 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.converter.UserConverter;
 import kg.academy.maken.entity.User;
 import kg.academy.maken.entity.UserRole;
-import kg.academy.maken.model.UserAuthModel;
-import kg.academy.maken.model.UserModel;
-import kg.academy.maken.model.UserNameUpdate;
-import kg.academy.maken.model.UserSearch;
+import kg.academy.maken.model.*;
 import kg.academy.maken.repository.UserRepository;
 import kg.academy.maken.service.RoleService;
 import kg.academy.maken.service.UserRoleService;
 import kg.academy.maken.service.UserService;
 import kg.academy.maken.specification.UserSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,21 +20,13 @@ import java.util.Base64;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final UserRoleService userRoleService;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, RoleService roleService, UserRoleService userRoleService) {
-        this.userRepository = userRepository;
-        this.userConverter = userConverter;
-        this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
-        this.userRoleService = userRoleService;
-    }
 
     @Override
     public UserModel saveModel(UserModel userModel) {
@@ -102,6 +91,16 @@ public class UserServiceImpl implements UserService {
             user.setLogin(userUpdateModel.getLogin());
         userRepository.save(user);
         return userUpdateModel;
+    }
+
+    @Override
+    public UserUpdatePasswordModel updateModel(UserUpdatePasswordModel userUpdatePasswordModel) {
+        Long id = userUpdatePasswordModel.getId();
+        User user = findById(id);
+        if(userUpdatePasswordModel!=null)
+            user.setPassword(passwordEncoder.encode(userUpdatePasswordModel.getPassword()));
+        userRepository.save(user);
+        return userUpdatePasswordModel;
     }
 
     @Override

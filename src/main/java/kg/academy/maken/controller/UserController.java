@@ -1,11 +1,9 @@
 package kg.academy.maken.controller;
 
 import kg.academy.maken.entity.User;
-import kg.academy.maken.model.UserAuthModel;
-import kg.academy.maken.model.UserModel;
-import kg.academy.maken.model.UserNameUpdate;
-import kg.academy.maken.model.UserSearch;
+import kg.academy.maken.model.*;
 import kg.academy.maken.service.UserService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +52,10 @@ public class UserController {
     @PutMapping("/update-name")
     public UserNameUpdate updateName(@RequestBody UserNameUpdate userNameUpdate) {
         return userService.updateModel(userNameUpdate);
+    }
+
+    @PutMapping("/update-password")
+    public UserUpdatePasswordModel updatePassword(@RequestBody UserUpdatePasswordModel updatePasswordModel) {
+        return userService.updateModel(updatePasswordModel);
     }
 }

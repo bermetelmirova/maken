@@ -1,7 +1,9 @@
 package kg.academy.maken.service;
 
 import kg.academy.maken.entity.Dashboard;
+import kg.academy.maken.model.DashboardAddMemberModel;
 import kg.academy.maken.model.DashboardModel;
+import kg.academy.maken.model.DashboardMemberModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,4 +21,7 @@ public interface DashboardService extends BaseService<Dashboard> {
     Page<DashboardModel> getPage(Pageable pageable);
 
     DashboardModel update(DashboardModel dashboardModel);
+
+    DashboardAddMemberModel addMember(DashboardAddMemberModel dashboardAddMemberModel);
+
 }

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Member extends BaseEntity{
+public class DashboardMember extends BaseEntity{
     @ManyToOne
     @JoinColumn(name  = "user_id", nullable = false)
     private User user;

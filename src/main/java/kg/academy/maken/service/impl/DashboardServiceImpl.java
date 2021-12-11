@@ -2,15 +2,16 @@ package kg.academy.maken.service.impl;
 
 import kg.academy.maken.converter.DashboardConverter;
 import kg.academy.maken.entity.Dashboard;
-import kg.academy.maken.entity.Member;
+import kg.academy.maken.entity.DashboardMember;
 import kg.academy.maken.entity.User;
+import kg.academy.maken.model.DashboardAddMemberModel;
 import kg.academy.maken.model.DashboardModel;
 import kg.academy.maken.repository.DashboardRepository;
 import kg.academy.maken.service.DashboardService;
 import kg.academy.maken.service.MemberService;
 import kg.academy.maken.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -20,22 +21,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
+@RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
     private final DashboardRepository dashboardRepository;
     private final DashboardConverter dashboardConverter;
     private final MemberService memberService;
     private final UserService userService;
-
-    @Autowired
-    public DashboardServiceImpl(DashboardRepository dashboardRepository,
-                                DashboardConverter dashboardConverter, MemberService memberService,
-                                UserService userService) {
-        this.dashboardRepository = dashboardRepository;
-        this.dashboardConverter = dashboardConverter;
-        this.memberService = memberService;
-        this.userService = userService;
-    }
 
     @Override
     public Dashboard save(Dashboard dashboard) {
@@ -67,7 +60,7 @@ public class DashboardServiceImpl implements DashboardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.getByLogin(userName);
-        memberService.save(new Member(user, dashboard, true));
+        memberService.save(new DashboardMember(user, dashboard, true));
         return dashboardModel;
     }
 
@@ -104,4 +97,11 @@ public class DashboardServiceImpl implements DashboardService {
         return dashboardConverter.convertFromEntity(dashboardForUpdate);
     }
 
+    @Override
+    public DashboardAddMemberModel addMember(DashboardAddMemberModel dashboardAddMemberModel) {
+        User user = userService.getByLogin(dashboardAddMemberModel.getLogin());
+        Dashboard dashboard = findById(dashboardAddMemberModel.getId());
+        memberService.save(new DashboardMember(user, dashboard, false));
+        return dashboardAddMemberModel;
+    }
 }
