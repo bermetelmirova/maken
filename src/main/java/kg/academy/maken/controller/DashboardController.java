@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DashboardController {
     private final DashboardService dashboardService;
-    private final ListService listService;
 
     @GetMapping
     public List<DashboardModel> getAll(){
@@ -36,9 +35,7 @@ public class DashboardController {
 
     @PostMapping
     public DashboardModel save(@RequestBody DashboardModel dashboardModel){
-        DashboardModel dashboard = dashboardService.saveModel(dashboardModel);
-        listService.defaultLists(dashboard.getID());
-        return  dashboard;
+        return  dashboardService.saveModel(dashboardModel);
     }
 
     @PostMapping("/add-member")

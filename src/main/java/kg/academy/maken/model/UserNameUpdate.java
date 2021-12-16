@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 
 public class UserNameUpdate {
-    private Long id;
+    private String token;
     private String login;
 }

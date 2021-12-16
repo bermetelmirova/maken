@@ -8,10 +8,13 @@ import kg.academy.maken.model.DashboardAddMemberModel;
 import kg.academy.maken.model.DashboardModel;
 import kg.academy.maken.repository.DashboardRepository;
 import kg.academy.maken.service.DashboardService;
+import kg.academy.maken.service.ListService;
 import kg.academy.maken.service.MemberService;
 import kg.academy.maken.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -23,12 +26,18 @@ import java.util.stream.Collectors;
 
 
 @Service
-@RequiredArgsConstructor
+
 public class DashboardServiceImpl implements DashboardService {
-    private final DashboardRepository dashboardRepository;
-    private final DashboardConverter dashboardConverter;
-    private final MemberService memberService;
-    private final UserService userService;
+    @Autowired
+    private DashboardRepository dashboardRepository;
+    @Autowired
+    private DashboardConverter dashboardConverter;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ListService listService;
 
     @Override
     public Dashboard save(Dashboard dashboard) {
@@ -55,30 +64,31 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardModel saveModel(DashboardModel dashboardModel) {
-        Dashboard dashboard = dashboardConverter.convertFromModel(dashboardModel);
+        Dashboard dashboard = dashboardConverter.convertToEntity(dashboardModel);
         dashboardRepository.save(dashboard);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = userService.getByLogin(userName);
         memberService.save(new DashboardMember(user, dashboard, true));
+        listService.defaultLists(dashboard);
         return dashboardModel;
     }
 
     @Override
     public DashboardModel deleteModelById(Long id) {
-        return dashboardConverter.convertFromEntity(deleteById(id));
+        return dashboardConverter.convertToModel(deleteById(id));
     }
 
     @Override
     public DashboardModel getModelById(Long id) {
-        return dashboardConverter.convertFromEntity(findById(id));
+        return dashboardConverter.convertToModel(findById(id));
     }
 
     @Override
     public List<DashboardModel> getAllModel() {
         List<Dashboard> dashboards = dashboardRepository.findAll();
         return dashboards.stream()
-                .map(dashboardConverter::convertFromEntity)
+                .map(dashboardConverter::convertToModel)
                 .collect(Collectors.toList());
     }
 
@@ -86,7 +96,7 @@ public class DashboardServiceImpl implements DashboardService {
     public Page<DashboardModel> getPage(Pageable pageable) {
         Page<Dashboard> dashboards = dashboardRepository.findAll(pageable);
         return dashboards
-                .map(dashboardConverter::convertFromEntity);
+                .map(dashboardConverter::convertToModel);
     }
 
     @Override
@@ -94,7 +104,7 @@ public class DashboardServiceImpl implements DashboardService {
         Dashboard dashboardForUpdate = findById(dashboardModel.getID());
         if (dashboardModel.getName() != null) dashboardForUpdate.setName(dashboardModel.getName());
         dashboardRepository.save(dashboardForUpdate);
-        return dashboardConverter.convertFromEntity(dashboardForUpdate);
+        return dashboardConverter.convertToModel(dashboardForUpdate);
     }
 
     @Override

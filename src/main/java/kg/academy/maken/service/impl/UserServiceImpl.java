@@ -3,6 +3,7 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.converter.UserConverter;
 import kg.academy.maken.entity.User;
 import kg.academy.maken.entity.UserRole;
+import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.*;
 import kg.academy.maken.repository.UserRepository;
 import kg.academy.maken.service.RoleService;
@@ -12,12 +13,16 @@ import kg.academy.maken.specification.UserSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel saveModel(UserModel userModel) {
-        User user = userConverter.convertFromModel(userModel);
+        User user = userConverter.convertToEntity(userModel);
         user.setIsActive(1L);
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         userRepository.save(user);
@@ -40,34 +45,32 @@ public class UserServiceImpl implements UserService {
         userRole.setRole(roleService.findById(1L));
         userRoleService.save(userRole);
 
-        return userConverter.convertFromEntity(user);
+        return userConverter.convertToModel(user);
     }
 
     @Override
     public UserModel deleteModelById(Long id) {
-        User userForDelete = userConverter.convertFromModel(getModelById(id));
+        User userForDelete = userConverter.convertToEntity(getModelById(id));
         if (userForDelete != null)
             userRepository.deleteById(id);
-        return getModelById(id);
+        return userConverter.convertToModel(userForDelete);
     }
 
     @Override
     public UserModel getModelById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = findById(id);
         UserModel userModel = new UserModel();
         if (user != null)
-            userModel = userConverter.convertFromEntity(user);
+            userModel = userConverter.convertToModel(user);
         return userModel;
     }
 
     @Override
     public List<UserModel> getAllModel() {
         List<User> users = userRepository.findAll();
-        List<UserModel> userModels = new ArrayList<>();
-        for (int i = 0; i < users.size(); i++) {
-            userModels.add(userConverter.convertFromEntity(users.get(i)));
-        }
-        return userModels;
+        return users.stream()
+                .map(userConverter::convertToModel)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -80,13 +83,14 @@ public class UserServiceImpl implements UserService {
         if (userModel.getTelegram() != null)
             user.setTelegram(userModel.getTelegram());
         userRepository.save(user);
-        return userConverter.convertFromEntity(user);
+        return userConverter.convertToModel(user);
     }
 
     @Override
     public UserNameUpdate updateModel(UserNameUpdate userUpdateModel) {
-        Long id = userUpdateModel.getId();
-        User user = findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = getByLogin(userName);
         if (userUpdateModel.getLogin() != null)
             user.setLogin(userUpdateModel.getLogin());
         userRepository.save(user);
@@ -95,8 +99,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserUpdatePasswordModel updateModel(UserUpdatePasswordModel userUpdatePasswordModel) {
-        Long id = userUpdatePasswordModel.getId();
-        User user = findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = getByLogin(userName);
         if(userUpdatePasswordModel!=null)
             user.setPassword(passwordEncoder.encode(userUpdatePasswordModel.getPassword()));
         userRepository.save(user);
@@ -148,8 +153,8 @@ public class UserServiceImpl implements UserService {
     public Page<User> searchUser(UserSearch userSearch, Pageable pageable) {
         UserSpecification userSpecification = new UserSpecification(userSearch);
         Page<User> userPage = userRepository.findAll(userSpecification, pageable);
-//        if (userPage.getContent().isEmpty())
-//            throw new ApiException("Список пустой", HttpStatus.BAD_REQUEST);
+        if (userPage.getContent().isEmpty())
+            throw new ApiException("Список пустой", HttpStatus.BAD_REQUEST);
         return userPage;
     }
 }

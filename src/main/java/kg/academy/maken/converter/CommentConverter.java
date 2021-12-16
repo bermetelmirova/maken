@@ -5,12 +5,9 @@ import kg.academy.maken.model.CommentModel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentConverter extends BaseConverter<CommentModel, Comment>{
-    public CommentConverter() {
-        super(CommentConverter::convertToEntity, CommentConverter::convertToModel);
-    }
-
-    private static CommentModel convertToModel(Comment comment) {
+public class CommentConverter implements BaseConverter<CommentModel, Comment> {
+    @Override
+    public CommentModel convertToModel(Comment comment) {
         if (comment == null) return null;
         return CommentModel.builder()
                 .ID(comment.getId())
@@ -18,7 +15,8 @@ public class CommentConverter extends BaseConverter<CommentModel, Comment>{
                 .build();
     }
 
-    private static Comment convertToEntity(CommentModel commentModel) {
+    @Override
+    public Comment convertToEntity(CommentModel commentModel) {
         if (commentModel == null) return null;
         return Comment.builder()
                 .text(commentModel.getText())

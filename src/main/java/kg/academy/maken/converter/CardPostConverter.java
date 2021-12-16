@@ -2,18 +2,24 @@ package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Card;
 import kg.academy.maken.model.CardPostModel;
+import kg.academy.maken.repository.ListRepository;
+import kg.academy.maken.service.LabelService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class CardPostConverter extends BaseConverter<CardPostModel, Card>{
-    public CardPostConverter() {
-        super(CardPostConverter::convertToEntity, CardPostConverter::convertToModel);
-    }
+public class CardPostConverter implements BaseConverter<CardPostModel, Card>{
+    @Autowired
+    private  ListRepository listService;
+    @Autowired
+    private  LabelService labelService;
 
-    private static CardPostModel convertToModel(Card card) {
+    @Override
+    public CardPostModel convertToModel(Card card) {
         if (card == null) return null;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return CardPostModel.builder()
@@ -27,7 +33,8 @@ public class CardPostConverter extends BaseConverter<CardPostModel, Card>{
                 .build();
     }
 
-    private static Card convertToEntity(CardPostModel cardPostModel) {
+    @Override
+    public Card convertToEntity(CardPostModel cardPostModel) {
         if (cardPostModel == null) return null;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return Card.builder()
@@ -35,6 +42,8 @@ public class CardPostConverter extends BaseConverter<CardPostModel, Card>{
                 .description(cardPostModel.getDescription())
                 .adminRating(cardPostModel.getAdminRating())
                 .deadline(LocalDateTime.parse(cardPostModel.getDeadline(), dateTimeFormatter))
+                .list(listService.getById(cardPostModel.getID()))
+                .label(labelService.findById(cardPostModel.getLabelId()))
                 .build();
     }
 }

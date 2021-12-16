@@ -2,14 +2,14 @@ package kg.academy.maken.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class CardCommentModel {
-    private Long ID;
-    private Long cardId;
-    private String comment;
+public class ListGetModel {
+    private Long id;
+    private List<CardModel> cardModels;
 }

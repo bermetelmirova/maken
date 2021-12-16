@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserUpdatePasswordModel {
-    private Long id;
-    private String password;
+        private String token;
+        private String password;
 }

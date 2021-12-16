@@ -8,8 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CardCommentModel {
-    private Long ID;
-    private Long cardId;
-    private String comment;
+public class ListStatusUpdateModel {
+    private Long id;
+    private Long statusId;
 }

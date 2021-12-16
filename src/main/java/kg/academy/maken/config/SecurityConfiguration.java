@@ -31,6 +31,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -41,6 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/api/user").hasRole("USER")
                 .antMatchers(HttpMethod.DELETE, "/api/user").hasRole("USER")
                 .antMatchers( "api/dashboard").hasRole("USER")
+                .antMatchers("api/status").permitAll()
+                .antMatchers("api/list").permitAll()
                 .and()
                 .httpBasic();
     }

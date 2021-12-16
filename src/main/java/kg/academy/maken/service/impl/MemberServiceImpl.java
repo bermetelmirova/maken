@@ -4,17 +4,16 @@ import kg.academy.maken.entity.DashboardMember;
 import kg.academy.maken.model.DashboardMemberModel;
 import kg.academy.maken.repository.MemberRepository;
 import kg.academy.maken.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class MemberServiceImpl implements MemberService {
-    private final MemberRepository memberRepository;
+    @Autowired
+    private  MemberRepository memberRepository;
 
-    public MemberServiceImpl(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     @Override
     public DashboardMember save(DashboardMember dashboardMember) {
@@ -54,4 +53,12 @@ public class MemberServiceImpl implements MemberService {
         save(dashboardMember);
         return model;
     }
+
+//    @Override
+//    public List<DashboardMemberModel> getMembersByDashboard(Long id) {
+//        List<DashboardMember> dashboardMembers = memberRepository.findByDashboard(id).orElse(null);
+//
+//        return dashboardMembers.stream()
+//                .map();
+//    }
 }

@@ -2,15 +2,16 @@ package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Rating;
 import kg.academy.maken.model.RatingModel;
+import kg.academy.maken.service.CardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
-public class RatingModelConverter extends BaseConverter<RatingModel, Rating>{
-    public RatingModelConverter() {
-        super(RatingModelConverter::convertToEntity, RatingModelConverter::convertToModel);
-    }
-
-    private static RatingModel convertToModel(Rating rating) {
+public class RatingModelConverter implements BaseConverter<RatingModel, Rating>{
+    private final CardService cardService;
+    @Override
+    public RatingModel convertToModel(Rating rating) {
         if (rating == null) return null;
         return RatingModel.builder()
                 .ID(rating.getId())
@@ -19,9 +20,10 @@ public class RatingModelConverter extends BaseConverter<RatingModel, Rating>{
                 .build();
     }
 
-    private static Rating convertToEntity(RatingModel ratingModel) {
+    public Rating convertToEntity(RatingModel ratingModel) {
         if (ratingModel == null) return null;
         return Rating.builder()
+                .card(cardService.findById(ratingModel.getCardId()))
                 .value(ratingModel.getValue())
                 .build();
     }

@@ -1,5 +1,6 @@
 package kg.academy.maken.model;
 
+
 import lombok.*;
 
 @Builder
@@ -7,9 +8,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class CardCommentModel {
+public class ListNameUpdateModel {
     private Long ID;
-    private Long cardId;
-    private String comment;
+    private String name;
 }

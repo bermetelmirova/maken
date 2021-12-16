@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 
 public class CardMemberModel {
-    private Long ID;
     private Long cardId;
     private DashboardMember dashboardMemberId;
 }

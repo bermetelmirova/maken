@@ -13,5 +13,6 @@ import java.util.List;
 public class ListModel {
     private Long ID;
     private String name;
-    private Long DashboardId;
+    private Long dashboardId;
+    private Long statusId;
 }

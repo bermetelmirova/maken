@@ -1,34 +1,27 @@
 package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Label;
-import kg.academy.maken.entity.User;
 import kg.academy.maken.model.LabelModel;
-import kg.academy.maken.model.UserModel;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Function;
-
 @Component
-public class LabelConverter extends BaseConverter<LabelModel, Label>{
-
-    public LabelConverter() {
-        super(LabelConverter::convertToEntity, LabelConverter::convertToModel);
-    }
-
-    private static LabelModel convertToModel(Label label) {
+public class LabelConverter implements BaseConverter<LabelModel, Label> {
+    @Override
+    public LabelModel convertToModel(Label label) {
         if (label == null) return null;
-      return LabelModel.builder()
-              .ID(label.getId())
-              .name(label.getName())
-              .color(label.getColor())
-              .build();
+        return LabelModel.builder()
+                .ID(label.getId())
+                .name(label.getName())
+                .color(label.getColor())
+                .build();
     }
 
-    private static Label convertToEntity(LabelModel labelModel) {
+    @Override
+    public Label convertToEntity(LabelModel labelModel) {
         if (labelModel == null) return null;
-       return Label.builder()
-               .name(labelModel.getName())
-               .color(labelModel.getColor())
-               .build();
+        return Label.builder()
+                .name(labelModel.getName())
+                .color(labelModel.getColor())
+                .build();
     }
 }
