@@ -69,7 +69,7 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public java.util.List<ListGetModel> getListByDashboard(Long id) {
-        java.util.List<List> list = listRepository.findByDashboard(id)
+        java.util.List<List> list = listRepository.findByDashboardId(id)
                 .orElseThrow(() -> new ApiException("Список пуст", HttpStatus.NO_CONTENT));
         java.util.List<ListGetModel> listGetModels = new ArrayList<>();
         for (List value : list) {
@@ -98,7 +98,7 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public List findByStatusOnDashboard(Long idStatus, Long idDashboard) {
-        return listRepository.findByStatusAndDashboard(idStatus, idDashboard).orElse(null);
+        return listRepository.findByStatusIdAndDashboardId(idStatus, idDashboard).orElse(null);
     }
 
     @Override

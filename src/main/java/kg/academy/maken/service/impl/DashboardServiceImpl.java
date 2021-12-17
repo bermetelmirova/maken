@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 
 @Service
-
 public class DashboardServiceImpl implements DashboardService {
     @Autowired
     private DashboardRepository dashboardRepository;
@@ -73,7 +72,7 @@ public class DashboardServiceImpl implements DashboardService {
         User user = userService.getByLogin(userName);
         memberService.save(new DashboardMember(user, dashboard, true));
         listService.defaultLists(dashboard);
-        return dashboardModel;
+        return dashboardConverter.convertToModel(dashboard);
     }
 
     @Override
@@ -116,8 +115,10 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardAddMemberModel addMember(DashboardAddMemberModel dashboardAddMemberModel) {
-        User user = userService.getByLogin(dashboardAddMemberModel.getLogin());
-        Dashboard dashboard = findById(dashboardAddMemberModel.getId());
+        User user = userService.getByLogin(dashboardAddMemberModel.getLoginUser());
+        if(user== null)
+            throw  new ApiException("User does not exist", HttpStatus.BAD_REQUEST);
+        Dashboard dashboard = findById(dashboardAddMemberModel.getIdDashboard());
         memberService.save(new DashboardMember(user, dashboard, false));
         return dashboardAddMemberModel;
     }

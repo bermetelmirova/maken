@@ -47,7 +47,12 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
 
     @Override
     public DashboardMember deleteById(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.getByLogin(userName);
         DashboardMember dashboardMember = findById(id);
+        if (!isAdmin(user, dashboardMember.getDashboard().getId()))
+            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
         if (dashboardMember == null)
             throw new ApiException("Участник не найден!", HttpStatus.BAD_REQUEST);
         memberRepository.deleteById(id);
@@ -56,7 +61,12 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
 
     @Override
     public DashboardMemberModel addAdmin(DashboardMemberModel model) {
-        DashboardMember dashboardMember = findById(model.getID());
+        DashboardMember dashboardMember = findById(model.getDashboardId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.getByLogin(userName);
+        if (!isAdmin(user, model.getDashboardId()))
+            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
         if (dashboardMember != null)
             dashboardMember.setIsAdmin(true);
         save(dashboardMember);
@@ -65,7 +75,12 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
 
     @Override
     public DashboardMemberModel removeAdmin(DashboardMemberModel model) {
-        DashboardMember dashboardMember = findById(model.getID());
+        DashboardMember dashboardMember = findById(model.getDashboardId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.getByLogin(userName);
+        if (!isAdmin(user, model.getDashboardId()))
+            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
         if (dashboardMember != null) dashboardMember.setIsAdmin(false);
         save(dashboardMember);
         return model;
@@ -75,8 +90,11 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
     public DashboardMemberModel removeMember(DashboardMemberModel model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        User user = userService.getByLogin(userName);
-        if(isAdmin(user, model.getDashboardId()))
+        User userCheck = userService.getByLogin(userName);
+        if (!isAdmin(userCheck, model.getDashboardId()))
+            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
+        User user = userService.findById(model.getUserId());
+        if (isAdmin(user, model.getDashboardId()))
             deleteById(model.getID());
         return model;
     }
@@ -93,14 +111,9 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
 
     @Override
     public Boolean isAdmin(User user, Long id) {
-        List<DashboardMember> dashboardMembers = memberRepository.findByDashboard(id).orElse(null);
-        if (dashboardMembers == null)
-            throw new ApiException("На доске нет участников", HttpStatus.NO_CONTENT);
-        for (DashboardMember dashboardMember : dashboardMembers) {
-            if (user == dashboardMember.getUser()) {
-                return dashboardMember.getIsAdmin();
-            }
-        }
-        return false;
+        DashboardMember dashboardMember = memberRepository.findByDashboardIdAndUserId(id, user.getId()).orElse(null);
+        if (dashboardMember == null)
+            throw new ApiException("На доске нет такого участника", HttpStatus.NO_CONTENT);
+        return dashboardMember.getIsAdmin();
     }
 }

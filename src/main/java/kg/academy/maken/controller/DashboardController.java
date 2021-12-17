@@ -39,7 +39,7 @@ public class DashboardController {
     }
 
     @PostMapping("/add-member")
-    public ResponseMessage<DashboardAddMemberModel> addUser(DashboardAddMemberModel dashboardAddMemberModel) {
+    public ResponseMessage<DashboardAddMemberModel> addUser(@RequestBody DashboardAddMemberModel dashboardAddMemberModel) {
         return new ResponseMessage<DashboardAddMemberModel>().prepareSuccessMessage(dashboardService.addMember(dashboardAddMemberModel));
     }
 

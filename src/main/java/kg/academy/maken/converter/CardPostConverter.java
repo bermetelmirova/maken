@@ -5,6 +5,7 @@ import kg.academy.maken.model.card_model.CardPostModel;
 import kg.academy.maken.repository.ListRepository;
 import kg.academy.maken.service.LabelService;
 
+import kg.academy.maken.service.ListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
     @Autowired
-    private ListRepository listService;
+    private ListService listService;
     @Autowired
     private LabelService labelService;
 
@@ -42,7 +43,7 @@ public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
                 .description(cardPostModel.getDescription())
                 .adminRating(cardPostModel.getAdminRating())
                 .deadline(LocalDateTime.parse(cardPostModel.getDeadline(), dateTimeFormatter))
-                .list(listService.getById(cardPostModel.getID()))
+                .list(listService.findById(cardPostModel.getListId()))
                 .label(labelService.findById(cardPostModel.getLabelId()))
                 .build();
     }

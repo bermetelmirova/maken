@@ -78,7 +78,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardModel> getCardsByList(Long id) {
-        List<Card> card = cardRepository.findByList(id).orElse(null);
+        List<Card> card = cardRepository.findByListId(id).orElse(null);
         if (card == null) {
             throw new ApiException("В листе нет карточек!", HttpStatus.NO_CONTENT);
         }
@@ -89,7 +89,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardChangeListModel changeList(CardChangeListModel cardChangeListModel) {
-        Card card = findById(cardChangeListModel.getListId());
+        Card card = findById(cardChangeListModel.getCardId());
         kg.academy.maken.entity.List list = listService.findById(cardChangeListModel.getListId());
         if (list == null || card == null)
             throw new ApiException("Указаны не существующие данные", HttpStatus.BAD_REQUEST);
@@ -105,7 +105,7 @@ public class CardServiceImpl implements CardService {
         if (commentModel.getComment() == null)
             throw new ApiException("Не написан текст!", HttpStatus.BAD_REQUEST);
         Card card = findById(commentModel.getCardId());
-        User user = userService.findById(commentModel.getCardId());
+        User user = userService.findById(commentModel.getUserId());
         Comment comment = new Comment();
         comment.setText(commentModel.getComment());
         comment.setCard(card);
@@ -175,7 +175,7 @@ public class CardServiceImpl implements CardService {
     public CardPostModel saveModel(CardPostModel model) {
         Card card = cardPostConverter.convertToEntity(model);
         cardRepository.save(card);
-        return null;
+        return cardPostConverter.convertToModel(card);
     }
 
     @Override

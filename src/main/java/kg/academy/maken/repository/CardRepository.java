@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
-    Optional<List<Card>> findByList(Long id);
-    @Query(value = "select l.dashboard_id from list l join cards c on l.id = c.list_id where c.id= :cardId", nativeQuery = true)
+    @Query(value = "select * from cards where list_id = :id", nativeQuery = true)
+    Optional<List<Card>> findByListId(@Param("id") Long id);
+    @Query(value = "select l.dashboard_id from lists l join cards c on l.id = c.list_id where c.id= :cardId", nativeQuery = true)
     Long findDashboardByCardId(@Param("cardId") Long id);
 }

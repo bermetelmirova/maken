@@ -48,7 +48,7 @@ public class CardMemberServiceImpl implements CardMemberService {
 
     @Override
     public List<CardMemberModel> getMembersByCard(Long id) {
-        List<CardMember> dashboardMembers = cardMemberRepository.findByCard(id)
+        List<CardMember> dashboardMembers = cardMemberRepository.findByCardId(id)
                 .orElseThrow(()-> new ApiException("Список участников пуст!", HttpStatus.NO_CONTENT));
         return dashboardMembers.stream()
                 .map(cardMemberConverter::convertToModel)

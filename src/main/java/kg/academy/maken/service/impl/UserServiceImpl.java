@@ -131,7 +131,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-
         return userRepository.findById(id)
                 .orElseThrow(() -> new ApiException("Пользователь не найден", HttpStatus.BAD_REQUEST));
     }

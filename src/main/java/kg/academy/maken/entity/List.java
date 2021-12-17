@@ -21,6 +21,6 @@ public class List extends BaseEntity {
     private Dashboard dashboard;
 
     @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
+    @JoinColumn(name = "status_id")
     private Status status;
 }
