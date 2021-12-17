@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Status extends BaseEntity{
+public class Status extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 }

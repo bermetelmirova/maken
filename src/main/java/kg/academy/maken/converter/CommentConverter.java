@@ -1,25 +1,25 @@
 package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Comment;
-import kg.academy.maken.model.CommentModel;
+import kg.academy.maken.model.commment_model.CommentGetModel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentConverter implements BaseConverter<CommentModel, Comment> {
+public class CommentConverter implements BaseConverter<CommentGetModel, Comment>{
+
     @Override
-    public CommentModel convertToModel(Comment comment) {
-        if (comment == null) return null;
-        return CommentModel.builder()
-                .ID(comment.getId())
-                .text(comment.getText())
+    public Comment convertToEntity(CommentGetModel commentGetModel) {
+        return Comment.builder()
+                .text(commentGetModel.getComment())
                 .build();
     }
 
     @Override
-    public Comment convertToEntity(CommentModel commentModel) {
-        if (commentModel == null) return null;
-        return Comment.builder()
-                .text(commentModel.getText())
+    public CommentGetModel convertToModel(Comment comment) {
+        return CommentGetModel.builder()
+                .ID(comment.getId())
+                .userId(comment.getUser().getId())
+                .comment(comment.getText())
                 .build();
     }
 }

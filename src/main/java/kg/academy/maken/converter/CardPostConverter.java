@@ -1,10 +1,10 @@
 package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Card;
-import kg.academy.maken.model.CardPostModel;
+import kg.academy.maken.model.card_model.CardPostModel;
 import kg.academy.maken.repository.ListRepository;
 import kg.academy.maken.service.LabelService;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class CardPostConverter implements BaseConverter<CardPostModel, Card>{
+public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
     @Autowired
-    private  ListRepository listService;
+    private ListRepository listService;
     @Autowired
-    private  LabelService labelService;
+    private LabelService labelService;
 
     @Override
     public CardPostModel convertToModel(Card card) {

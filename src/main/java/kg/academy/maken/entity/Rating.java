@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Rating extends BaseEntity{
+public class Rating extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)
     private Card card;

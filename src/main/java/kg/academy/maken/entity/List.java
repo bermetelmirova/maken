@@ -12,15 +12,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class List extends BaseEntity{
+public class List extends BaseEntity {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name ="dashboard_id", nullable = false)
+    @JoinColumn(name = "dashboard_id", nullable = false)
     private Dashboard dashboard;
 
     @ManyToOne
-    @JoinColumn(name ="status_id", nullable = false)
+    @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 }

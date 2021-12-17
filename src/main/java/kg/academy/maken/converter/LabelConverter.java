@@ -1,7 +1,8 @@
 package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Label;
-import kg.academy.maken.model.LabelModel;
+import kg.academy.maken.model.label_model.LabelModel;
+
 import org.springframework.stereotype.Component;
 
 @Component

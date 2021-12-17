@@ -5,16 +5,14 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface BaseModelService <T>{
-        T saveModel(T model);
+public interface BaseModelService<T> {
+    T saveModel(T model);
 
-       T deleteModelById(Long id);
+    T deleteModelById(Long id);
 
-       T getModelById(Long id);
+    T getModelById(Long id);
 
-        List<T> getAllModel();
+    List<T> getAllModel();
 
-        Page<T> getPage(Pageable pageable);
-
-        T update(T model);
+    T update(T model);
 }

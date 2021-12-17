@@ -4,19 +4,19 @@ import kg.academy.maken.converter.DashboardConverter;
 import kg.academy.maken.entity.Dashboard;
 import kg.academy.maken.entity.DashboardMember;
 import kg.academy.maken.entity.User;
-import kg.academy.maken.model.DashboardAddMemberModel;
-import kg.academy.maken.model.DashboardModel;
+import kg.academy.maken.exception.ApiException;
+import kg.academy.maken.model.dashboard_model.DashboardAddMemberModel;
+import kg.academy.maken.model.dashboard_model.DashboardModel;
 import kg.academy.maken.repository.DashboardRepository;
+import kg.academy.maken.service.DashboardMemberService;
 import kg.academy.maken.service.DashboardService;
 import kg.academy.maken.service.ListService;
-import kg.academy.maken.service.MemberService;
 import kg.academy.maken.service.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     private DashboardConverter dashboardConverter;
     @Autowired
-    private MemberService memberService;
+    private DashboardMemberService memberService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -51,14 +51,16 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public Dashboard findById(Long id) {
-        return dashboardRepository.findById(id).orElse(null);
+        return dashboardRepository.findById(id)
+                .orElseThrow(() -> new ApiException("Доска не найдена", HttpStatus.BAD_REQUEST));
     }
 
     @Override
     public Dashboard deleteById(Long id) {
         Dashboard dashboard = findById(id);
-        if (dashboard != null)
-            dashboardRepository.deleteById(id);
+        if (dashboard == null)
+            throw new ApiException("Доска не найдена!", HttpStatus.BAD_REQUEST);
+        dashboardRepository.deleteById(id);
         return dashboard;
     }
 
@@ -76,6 +78,11 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardModel deleteModelById(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.getByLogin(userName);
+        if (!memberService.isAdmin(user, id))
+            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
         return dashboardConverter.convertToModel(deleteById(id));
     }
 

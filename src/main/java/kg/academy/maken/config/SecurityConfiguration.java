@@ -40,9 +40,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/user").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, "/api/user").hasRole("USER")
                 .antMatchers(HttpMethod.DELETE, "/api/user").hasRole("USER")
-                .antMatchers( "api/dashboard").hasRole("USER")
-                .antMatchers("api/status").permitAll()
-                .antMatchers("api/list").permitAll()
+
+                .antMatchers(HttpMethod.GET, "api/dashboard").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "api/dashboard").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "api/dashboard").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "api/dashboard").hasRole("USER")
+
+                .antMatchers(HttpMethod.GET, "api/list").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "api/list").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "api/list").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "api/list").hasRole("USER")
+
+                .antMatchers(HttpMethod.GET, "api/status").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "api/status").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "api/status").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "api/status").hasRole("USER")
+
+                .antMatchers(HttpMethod.GET, "/api/card").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/api/card").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "/api/card").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/card").hasRole("USER")
+
+                .antMatchers(HttpMethod.GET, "/api/member").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/api/member").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "/api/member").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/member").hasRole("USER")
+
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic();

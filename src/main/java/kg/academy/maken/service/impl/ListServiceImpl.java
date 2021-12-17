@@ -5,15 +5,14 @@ import kg.academy.maken.converter.ListNameUpdateConverter;
 import kg.academy.maken.converter.ListUpdateStatusConverter;
 import kg.academy.maken.entity.Dashboard;
 import kg.academy.maken.entity.List;
+import kg.academy.maken.entity.User;
 import kg.academy.maken.exception.ApiException;
-import kg.academy.maken.model.ListGetModel;
-import kg.academy.maken.model.ListModel;
-import kg.academy.maken.model.ListNameUpdateModel;
-import kg.academy.maken.model.ListStatusUpdateModel;
+import kg.academy.maken.model.list_model.ListGetModel;
+import kg.academy.maken.model.list_model.ListModel;
+import kg.academy.maken.model.list_model.ListNameUpdateModel;
+import kg.academy.maken.model.list_model.ListStatusUpdateModel;
 import kg.academy.maken.repository.ListRepository;
-import kg.academy.maken.service.CardService;
-import kg.academy.maken.service.ListService;
-import kg.academy.maken.service.StatusService;
+import kg.academy.maken.service.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,7 +42,11 @@ public class ListServiceImpl implements ListService {
     private ListNameUpdateConverter listNameUpdateConverter;
     @Autowired
     private CardService cardService;
-    
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private DashboardMemberService memberService;
+
     @Override
     public void defaultLists(Dashboard dashboard) {
         listRepository.save(List.builder()
@@ -65,10 +70,10 @@ public class ListServiceImpl implements ListService {
     @Override
     public java.util.List<ListGetModel> getListByDashboard(Long id) {
         java.util.List<List> list = listRepository.findByDashboard(id)
-                .orElseThrow(()-> new ApiException("Список пуст", HttpStatus.NO_CONTENT));
+                .orElseThrow(() -> new ApiException("Список пуст", HttpStatus.NO_CONTENT));
         java.util.List<ListGetModel> listGetModels = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            listGetModels.add(new ListGetModel(list.get(i).getId(), cardService.getCardsByList(list.get(i).getId())));
+        for (List value : list) {
+            listGetModels.add(new ListGetModel(value.getId(), cardService.getCardsByList(value.getId())));
         }
         return listGetModels;
     }
@@ -76,7 +81,7 @@ public class ListServiceImpl implements ListService {
     @Override
     public ListStatusUpdateModel update(ListStatusUpdateModel listStatusUpdateModel) {
         List list = findById(listStatusUpdateModel.getId());
-        if(listStatusUpdateModel.getStatusId()!= null)
+        if (listStatusUpdateModel.getStatusId() != null)
             list.setStatus(statusService.findById(listStatusUpdateModel.getStatusId()));
         listRepository.save(list);
         return listUpdateStatusConverter.convertToModel(list);
@@ -85,21 +90,42 @@ public class ListServiceImpl implements ListService {
     @Override
     public ListNameUpdateModel update(ListNameUpdateModel listNameUpdateModel) {
         List list = findById(listNameUpdateModel.getID());
-        if(listNameUpdateModel.getName()!= null)
+        if (listNameUpdateModel.getName() != null)
             list.setName((listNameUpdateModel.getName()));
         listRepository.save(list);
         return listNameUpdateConverter.convertToModel(list);
     }
 
     @Override
+    public List findByStatusOnDashboard(Long idStatus, Long idDashboard) {
+        return listRepository.findByStatusAndDashboard(idStatus, idDashboard).orElse(null);
+    }
+
+    @Override
+    public Boolean isListExist(String name) {
+        List list = listRepository.findByName(name).orElse(null);
+        if (list != null)
+            return true;
+        return false;
+    }
+
+    @Override
     public ListModel saveModel(ListModel model) {
         List list = listConverter.convertToEntity(model);
+        if (isListExist(model.getName()))
+            throw new ApiException("Такой лист уже существует!", HttpStatus.BAD_REQUEST);
         listRepository.save(list);
         return listConverter.convertToModel(list);
     }
 
     @Override
     public ListModel deleteModelById(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.getByLogin(userName);
+        List list = findById(id);
+        if (!memberService.isAdmin(user, list.getDashboard().getId()))
+            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
         return listConverter.convertToModel(deleteById(id));
     }
 
@@ -125,9 +151,9 @@ public class ListServiceImpl implements ListService {
     @Override
     public ListModel update(ListModel model) {
         List list = findById(model.getID());
-        if(model.getName()!= null) 
+        if (model.getName() != null)
             list.setName(model.getName());
-        if(model.getStatusId()!= null) 
+        if (model.getStatusId() != null)
             list.setStatus(statusService.findById(model.getStatusId()));
         listRepository.save(list);
         return listConverter.convertToModel(list);
@@ -145,14 +171,16 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public List findById(Long id) {
-        return listRepository.findById(id).orElse(null);
+        return listRepository.findById(id)
+                .orElseThrow(() -> new ApiException("Лист не найден", HttpStatus.BAD_REQUEST));
     }
 
     @Override
     public List deleteById(Long id) {
         List list = findById(id);
-        if (list != null)
-            listRepository.deleteById(id);
+        if (list == null)
+            throw new ApiException("Лист не найдена!", HttpStatus.BAD_REQUEST);
+        listRepository.deleteById(id);
         return list;
     }
 }

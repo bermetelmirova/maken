@@ -1,21 +1,27 @@
 package kg.academy.maken.service.impl;
 
+import kg.academy.maken.converter.CardMemberConverter;
 import kg.academy.maken.entity.CardMember;
+import kg.academy.maken.entity.DashboardMember;
+import kg.academy.maken.exception.ApiException;
+import kg.academy.maken.model.card_model.CardMemberModel;
+import kg.academy.maken.model.dashboard_model.DashboardMemberModel;
 import kg.academy.maken.repository.CardMemberRepository;
 import kg.academy.maken.service.CardMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CardMemberServiceImpl implements CardMemberService {
-    private final CardMemberRepository cardMemberRepository;
+    @Autowired
+    private  CardMemberRepository cardMemberRepository;
 
     @Autowired
-    public CardMemberServiceImpl(CardMemberRepository cardMemberRepository) {
-        this.cardMemberRepository = cardMemberRepository;
-    }
+    public CardMemberConverter cardMemberConverter;
 
     @Override
     public CardMember save(CardMember cardMember) {
@@ -38,5 +44,19 @@ public class CardMemberServiceImpl implements CardMemberService {
         if (cardMember != null)
             cardMemberRepository.deleteById(id);
         return cardMember;
+    }
+
+    @Override
+    public List<CardMemberModel> getMembersByCard(Long id) {
+        List<CardMember> dashboardMembers = cardMemberRepository.findByCard(id)
+                .orElseThrow(()-> new ApiException("Список участников пуст!", HttpStatus.NO_CONTENT));
+        return dashboardMembers.stream()
+                .map(cardMemberConverter::convertToModel)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CardMember findByCardAndMember(Long cardId, Long userID) {
+        return cardMemberRepository.findByCardAndDashboardMember(cardId, userID).orElse(null);
     }
 }

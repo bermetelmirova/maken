@@ -2,20 +2,19 @@ package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Dashboard;
 import kg.academy.maken.entity.List;
-import kg.academy.maken.model.ListModel;
-import kg.academy.maken.repository.DashboardRepository;
+import kg.academy.maken.model.list_model.ListModel;
 import kg.academy.maken.service.DashboardService;
 import kg.academy.maken.service.StatusService;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListConverter implements BaseConverter<ListModel, List>{
+public class ListConverter implements BaseConverter<ListModel, List> {
     @Autowired
-    private  StatusService statusService;
+    private StatusService statusService;
     @Autowired
-    private  DashboardService dashboardService;
+    private DashboardService dashboardService;
 
     @Override
     public List convertToEntity(ListModel listModel) {
@@ -25,7 +24,7 @@ public class ListConverter implements BaseConverter<ListModel, List>{
         return List.builder()
                 .name(listModel.getName())
                 .dashboard(dashboard)
-                .status(listModel.getStatusId()!= null ? statusService.findById(listModel.getStatusId()) : null)
+                .status(listModel.getStatusId() != null ? statusService.findById(listModel.getStatusId()) : null)
                 .build();
     }
 

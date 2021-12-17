@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Image extends BaseEntity{
+public class Image extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
 }

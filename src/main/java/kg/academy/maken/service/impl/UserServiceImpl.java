@@ -4,7 +4,7 @@ import kg.academy.maken.converter.UserConverter;
 import kg.academy.maken.entity.User;
 import kg.academy.maken.entity.UserRole;
 import kg.academy.maken.exception.ApiException;
-import kg.academy.maken.model.*;
+import kg.academy.maken.model.user_model.*;
 import kg.academy.maken.repository.UserRepository;
 import kg.academy.maken.service.RoleService;
 import kg.academy.maken.service.UserRoleService;
@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,10 @@ public class UserServiceImpl implements UserService {
     private final UserRoleService userRoleService;
 
     @Override
-    public UserModel saveModel(UserModel userModel) {
+    public String saveModel(UserModel userModel) {
+        User checkLogin = userRepository.findByLogin(userModel.getLogin()).orElse(null);
+        if (checkLogin != null)
+            throw new ApiException("Такой пользователь уже есть!", HttpStatus.BAD_REQUEST);
         User user = userConverter.convertToEntity(userModel);
         user.setIsActive(1L);
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
@@ -45,7 +47,8 @@ public class UserServiceImpl implements UserService {
         userRole.setRole(roleService.findById(1L));
         userRoleService.save(userRole);
 
-        return userConverter.convertToModel(user);
+        String loginPasswordPair = userModel.getLogin() + ":" + userModel.getPassword();
+        return "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
     }
 
     @Override
@@ -75,7 +78,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateModel(UserModel userModel) {
-        User user = userRepository.getById(userModel.getID());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = getByLogin(userName);
         if (userModel.getLogin() != null)
             user.setLogin(userModel.getLogin());
         if (userModel.getPassword() != null)
@@ -102,7 +107,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         User user = getByLogin(userName);
-        if(userUpdatePasswordModel!=null)
+        if (userUpdatePasswordModel != null)
             user.setPassword(passwordEncoder.encode(userUpdatePasswordModel.getPassword()));
         userRepository.save(user);
         return userUpdatePasswordModel;
@@ -126,14 +131,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ApiException("Пользователь не найден", HttpStatus.BAD_REQUEST));
     }
 
     @Override
     public User deleteById(Long id) {
         User user = findById(id);
-        if (user != null)
-            userRepository.deleteById(id);
+        if (user == null)
+            throw new ApiException("Пользователь не найден!", HttpStatus.BAD_REQUEST);
+        userRepository.deleteById(id);
         return user;
     }
 
@@ -142,11 +150,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByLogin(userModel.getLogin()).orElseThrow(() -> new IllegalArgumentException("Такого user'а нет!"));
         boolean isMatches = passwordEncoder.matches(userModel.getPassword(), user.getPassword());
         if (!isMatches) {
-            throw new IllegalArgumentException("Неверный пароль или логин");
+            throw new ApiException("Неверный пароль или логин!", HttpStatus.BAD_REQUEST);
         }
         String loginPasswordPair = userModel.getLogin() + ":" + userModel.getPassword();
         return "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
-
     }
 
     @Override

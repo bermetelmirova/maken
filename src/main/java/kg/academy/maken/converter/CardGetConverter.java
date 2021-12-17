@@ -1,19 +1,21 @@
 package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Card;
-import kg.academy.maken.model.CardGetModel;
+import kg.academy.maken.model.card_model.CardGetModel;
 import kg.academy.maken.service.ListService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RequiredArgsConstructor
 @Component
-public class CardGetConverter implements BaseConverter<CardGetModel, Card>{
+public class CardGetConverter implements BaseConverter<CardGetModel, Card> {
     private final ListService listService;
+
     @Override
     public Card convertToEntity(CardGetModel cardGetModel) {
         if (cardGetModel == null) return null;
@@ -30,7 +32,6 @@ public class CardGetConverter implements BaseConverter<CardGetModel, Card>{
     @Override
     public CardGetModel convertToModel(Card card) {
         if (card == null) return null;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return CardGetModel.builder()
                 .ID(card.getId())
                 .name(card.getName())

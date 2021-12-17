@@ -1,7 +1,8 @@
 package kg.academy.maken.controller;
 
 import kg.academy.maken.entity.User;
-import kg.academy.maken.model.*;
+import kg.academy.maken.model.ResponseMessage;
+import kg.academy.maken.model.user_model.*;
 import kg.academy.maken.service.UserService;
 
 import org.springframework.data.domain.Page;
@@ -20,13 +21,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserModel save(@RequestBody UserModel userModel) {
-        return userService.saveModel(userModel);
+    public ResponseMessage<String> save(@RequestBody UserModel userModel) {
+        return new ResponseMessage<String>().prepareSuccessMessage(userService.saveModel(userModel));
     }
 
     @GetMapping("/{id}")
-    public UserModel getById(@PathVariable Long id) {
-        return userService.getModelById(id);
+    public ResponseMessage<UserModel> getById(@PathVariable Long id) {
+        return new ResponseMessage<UserModel>().prepareSuccessMessage(userService.getModelById(id));
     }
 
     @GetMapping()
@@ -40,22 +41,22 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public String signUp(@RequestBody UserAuthModel userAuthModel) {
-        return userService.getAuthorisationToken(userAuthModel);
+    public ResponseMessage<String> signUp(@RequestBody UserAuthModel userAuthModel) {
+        return new ResponseMessage<String>().prepareSuccessMessage(userService.getAuthorisationToken(userAuthModel));
     }
 
     @PutMapping()
-    public UserModel update(@RequestBody UserModel userModel) {
-        return userService.updateModel(userModel);
+    public ResponseMessage<UserModel> update(@RequestBody UserModel userModel) {
+        return new ResponseMessage<UserModel>().prepareSuccessMessage(userService.updateModel(userModel));
     }
 
     @PutMapping("/update-name")
-    public UserNameUpdate updateName(@RequestBody UserNameUpdate userNameUpdate) {
-        return userService.updateModel(userNameUpdate);
+    public ResponseMessage<UserNameUpdate> updateName(@RequestBody UserNameUpdate userNameUpdate) {
+        return new ResponseMessage<UserNameUpdate>().prepareSuccessMessage(userService.updateModel(userNameUpdate));
     }
 
     @PutMapping("/update-password")
-    public UserUpdatePasswordModel updatePassword(@RequestBody UserUpdatePasswordModel updatePasswordModel) {
-        return userService.updateModel(updatePasswordModel);
+    public ResponseMessage<UserUpdatePasswordModel> updatePassword(@RequestBody UserUpdatePasswordModel updatePasswordModel) {
+        return new ResponseMessage<UserUpdatePasswordModel>().prepareSuccessMessage(userService.updateModel(updatePasswordModel));
     }
 }

@@ -37,9 +37,6 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<Status> getAll() {
-        Status status = findById(3L);
-        status.setName("DONE");
-        statusRepository.save(status);
         return statusRepository.findAll();
     }
 }

@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CardMember extends BaseEntity{
+public class CardMember extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)
     private Card card;

@@ -12,15 +12,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class DashboardMember extends BaseEntity{
+public class DashboardMember extends BaseEntity {
     @ManyToOne
-    @JoinColumn(name  = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "dashboard_id", nullable = false)
     private Dashboard dashboard;
 
-    @Column(name  = "is_admin", nullable = false)
+    @Column(name = "is_admin", nullable = false)
     private Boolean isAdmin;
 }

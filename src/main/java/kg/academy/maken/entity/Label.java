@@ -1,4 +1,5 @@
 package kg.academy.maken.entity;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Label extends BaseEntity{
+public class Label extends BaseEntity {
     @Column(name = "color", nullable = false)
     private String color;
 

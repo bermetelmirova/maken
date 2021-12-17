@@ -1,7 +1,7 @@
 package kg.academy.maken.specification;
 
 import kg.academy.maken.entity.User;
-import kg.academy.maken.model.UserSearch;
+import kg.academy.maken.model.user_model.UserSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
