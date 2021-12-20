@@ -2,10 +2,8 @@ package kg.academy.maken.service.impl;
 
 import kg.academy.maken.converter.CardMemberConverter;
 import kg.academy.maken.entity.CardMember;
-import kg.academy.maken.entity.DashboardMember;
 import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.card_model.CardMemberModel;
-import kg.academy.maken.model.dashboard_model.DashboardMemberModel;
 import kg.academy.maken.repository.CardMemberRepository;
 import kg.academy.maken.service.CardMemberService;
 import org.springframework.beans.factory.annotation.Autowired;

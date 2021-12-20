@@ -11,7 +11,7 @@ public class UserConverter implements BaseConverter<UserModel, User> {
     public UserModel convertToModel(User user) {
         if (user == null) return null;
         return UserModel.builder()
-                .ID(user.getId())
+                .id(user.getId())
                 .login(user.getLogin())
                 .telegram(user.getTelegram())
                 .password(user.getPassword())

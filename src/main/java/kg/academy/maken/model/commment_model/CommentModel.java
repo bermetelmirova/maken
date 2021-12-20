@@ -9,8 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class CommentModel {
-    private Long ID;
+    private Long id;
     private Long cardId;
-    private Long userId;
     private String comment;
 }

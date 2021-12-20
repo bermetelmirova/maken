@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class LabelModel {
-    private Long ID;
+    private Long id;
     private String color;
     private String name;
 }

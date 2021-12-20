@@ -33,7 +33,7 @@ public class CardGetConverter implements BaseConverter<CardGetModel, Card> {
     public CardGetModel convertToModel(Card card) {
         if (card == null) return null;
         return CardGetModel.builder()
-                .ID(card.getId())
+                .id(card.getId())
                 .name(card.getName())
                 .deadline(card.getDeadline().toString())
                 .description(card.getDescription())

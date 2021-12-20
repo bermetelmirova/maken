@@ -103,7 +103,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardModel update(DashboardModel dashboardModel) {
-        Dashboard dashboardForUpdate = findById(dashboardModel.getID());
+        Dashboard dashboardForUpdate = findById(dashboardModel.getId());
         if (dashboardModel.getName() != null) dashboardForUpdate.setName(dashboardModel.getName());
         dashboardRepository.save(dashboardForUpdate);
         return dashboardConverter.convertToModel(dashboardForUpdate);

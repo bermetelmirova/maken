@@ -15,7 +15,7 @@ public class RatingModelConverter implements BaseConverter<RatingModel, Rating> 
     public RatingModel convertToModel(Rating rating) {
         if (rating == null) return null;
         return RatingModel.builder()
-                .ID(rating.getId())
+                .id(rating.getId())
                 .cardId(rating.getCard().getId())
                 .value(rating.getValue())
                 .build();

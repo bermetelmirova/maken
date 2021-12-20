@@ -32,7 +32,7 @@ public class ListConverter implements BaseConverter<ListModel, List> {
     public ListModel convertToModel(List list) {
         if (list == null) return null;
         return ListModel.builder()
-                .ID(list.getId())
+                .id(list.getId())
                 .name(list.getName())
                 .dashboardId(list.getDashboard().getId())
                 .statusId(list.getStatus() != null ? list.getStatus().getId() : null)

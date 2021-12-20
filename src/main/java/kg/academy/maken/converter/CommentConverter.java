@@ -17,8 +17,7 @@ public class CommentConverter implements BaseConverter<CommentGetModel, Comment>
     @Override
     public CommentGetModel convertToModel(Comment comment) {
         return CommentGetModel.builder()
-                .ID(comment.getId())
-                .userId(comment.getUser().getId())
+                .id(comment.getId())
                 .comment(comment.getText())
                 .build();
     }

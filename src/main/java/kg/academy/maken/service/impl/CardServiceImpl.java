@@ -103,7 +103,7 @@ public class CardServiceImpl implements CardService {
         if (commentModel.getComment() == null)
             throw new ApiException("Не написан текст!", HttpStatus.BAD_REQUEST);
         Card card = findById(commentModel.getCardId());
-        User user = userService.findById(commentModel.getUserId());
+        User user = userService.getCurrentUser();
         Comment comment = new Comment();
         comment.setText(commentModel.getComment());
         comment.setCard(card);
@@ -136,7 +136,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardPostModel rejectTask(CardPostModel cardModel) {
-        Card card = findById(cardModel.getID());
+        Card card = findById(cardModel.getId());
         Long idDashboard = listService.findById(cardModel.getListId()).getDashboard().getId();
         kg.academy.maken.entity.List list = listService.findByStatusOnDashboard(2L, idDashboard);
         card.setList(list);
@@ -202,7 +202,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardPostModel update(CardPostModel model) {
-        Card card = findById(model.getID());
+        Card card = findById(model.getId());
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         if (model.getAdminRating() != null)
             card.setAdminRating(model.getAdminRating());

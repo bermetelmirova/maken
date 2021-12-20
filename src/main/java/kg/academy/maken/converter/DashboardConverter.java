@@ -10,7 +10,7 @@ public class DashboardConverter implements BaseConverter<DashboardModel, Dashboa
     public DashboardModel convertToModel(Dashboard dashboard) {
         if (dashboard == null) return null;
         return DashboardModel.builder()
-                .ID(dashboard.getId())
+                .id(dashboard.getId())
                 .name(dashboard.getName())
                 .build();
     }

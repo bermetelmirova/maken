@@ -43,7 +43,7 @@ public class LabelServiceImpl implements LabelService {
 
     @Override
     public LabelModel update(LabelModel labelModel) {
-        Label label = findById(labelModel.getID());
+        Label label = findById(labelModel.getId());
         if (labelModel.getName() != null) label.setName(labelModel.getName());
         if (labelModel.getColor() != null) label.setColor(labelModel.getColor());
         labelRepository.save(label);

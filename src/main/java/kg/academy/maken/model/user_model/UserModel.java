@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class UserModel {
-    private Long ID;
+    private Long id;
     private String login;
     private String telegram;
     private String password;

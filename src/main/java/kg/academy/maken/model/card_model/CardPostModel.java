@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class CardPostModel {
-    private Long ID;
+    private Long id;
     private String name;
     private String deadline;
     private String description;

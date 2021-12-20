@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DashboardAddMemberModel {
-    private Long idDashboard; //dashboard id;
+    private Long idDashboard;
     private String loginUser;
 }

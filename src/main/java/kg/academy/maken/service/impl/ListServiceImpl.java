@@ -40,8 +40,6 @@ public class ListServiceImpl implements ListService {
     @Autowired
     private CardService cardService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private DashboardMemberService memberService;
 
     @Override
@@ -86,7 +84,7 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public ListNameUpdateModel update(ListNameUpdateModel listNameUpdateModel) {
-        List list = findById(listNameUpdateModel.getID());
+        List list = findById(listNameUpdateModel.getId());
         if (listNameUpdateModel.getName() != null)
             list.setName((listNameUpdateModel.getName()));
         listRepository.save(list);
@@ -144,7 +142,7 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public ListModel update(ListModel model) {
-        List list = findById(model.getID());
+        List list = findById(model.getId());
         if (model.getName() != null)
             list.setName(model.getName());
         if (model.getStatusId() != null)

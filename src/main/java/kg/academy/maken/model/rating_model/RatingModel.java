@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class RatingModel {
-    private Long ID;
+    private Long id;
     private Long cardId;
     private Double value;
 }

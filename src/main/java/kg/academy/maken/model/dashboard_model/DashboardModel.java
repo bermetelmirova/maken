@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 
 public class DashboardModel {
-    private Long ID;
+    private Long id;
     private String name;
 }

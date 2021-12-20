@@ -19,7 +19,7 @@ public class ListNameUpdateConverter implements BaseConverter<ListNameUpdateMode
     public ListNameUpdateModel convertToModel(List list) {
         if (list == null) return null;
         return ListNameUpdateModel.builder()
-                .ID(list.getId())
+                .id(list.getId())
                 .name(list.getName())
                 .build();
     }

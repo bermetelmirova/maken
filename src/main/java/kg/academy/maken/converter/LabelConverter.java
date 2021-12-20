@@ -11,7 +11,7 @@ public class LabelConverter implements BaseConverter<LabelModel, Label> {
     public LabelModel convertToModel(Label label) {
         if (label == null) return null;
         return LabelModel.builder()
-                .ID(label.getId())
+                .id(label.getId())
                 .name(label.getName())
                 .color(label.getColor())
                 .build();

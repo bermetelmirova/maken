@@ -8,7 +8,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ListNameUpdateModel {
-    private Long ID;
+    private Long id;
     private String name;
 }

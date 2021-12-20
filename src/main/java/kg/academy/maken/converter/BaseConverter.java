@@ -1,7 +1,7 @@
 package kg.academy.maken.converter;
 
-public interface BaseConverter<Model, Entity> {
-    public Entity convertToEntity(Model model);
+public interface BaseConverter<M, E> {
+    E convertToEntity(M model);
 
-    public Model convertToModel(Entity entity);
+    M convertToModel(E entity);
 }

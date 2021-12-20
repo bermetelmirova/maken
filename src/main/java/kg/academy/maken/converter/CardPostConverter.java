@@ -22,7 +22,7 @@ public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
     public CardPostModel convertToModel(Card card) {
         if (card == null) return null;
         return CardPostModel.builder()
-                .ID(card.getId())
+                .id(card.getId())
                 .name(card.getName())
                 .deadline(card.getDeadline().toString())
                 .description(card.getDescription())

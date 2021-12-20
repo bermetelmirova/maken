@@ -2,7 +2,6 @@ package kg.academy.maken.service;
 
 import kg.academy.maken.entity.Dashboard;
 import kg.academy.maken.entity.List;
-import kg.academy.maken.model.dashboard_model.DashboardModel;
 import kg.academy.maken.model.list_model.ListGetModel;
 import kg.academy.maken.model.list_model.ListModel;
 import kg.academy.maken.model.list_model.ListNameUpdateModel;

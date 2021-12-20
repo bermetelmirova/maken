@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 
 public class DashboardMemberModel {
-    private Long ID;
+    private Long id;
     private Long userId;
     private Long dashboardId;
 }
