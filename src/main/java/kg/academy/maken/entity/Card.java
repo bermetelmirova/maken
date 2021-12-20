@@ -1,6 +1,8 @@
 package kg.academy.maken.entity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -27,10 +29,12 @@ public class Card extends BaseEntity {
     private Double adminRating;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "list_id", nullable = false)
     private List list;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "label_id")
     private Label label;
 }

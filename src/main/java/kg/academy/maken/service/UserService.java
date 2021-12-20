@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface UserService extends BaseService<User> {
-    String saveModel(UserModel userModel);
+    UserTokenModel saveModel(UserModel userModel);
 
     UserModel deleteModelById(Long id);
 
@@ -24,7 +24,9 @@ public interface UserService extends BaseService<User> {
 
     User getByLogin(String login);
 
-    String getAuthorisationToken(UserAuthModel userModel);
+    UserTokenModel getAuthorisationToken(UserAuthModel userModel);
 
     Page<User> searchUser(UserSearch userSearch, Pageable pageable);
+
+    User  getCurrentUser();
 }

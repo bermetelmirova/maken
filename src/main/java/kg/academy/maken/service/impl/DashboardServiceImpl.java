@@ -77,11 +77,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardModel deleteModelById(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User user = userService.getByLogin(userName);
-        if (!memberService.isAdmin(user, id))
-            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
+        memberService.isAdmin(id);
         return dashboardConverter.convertToModel(deleteById(id));
     }
 

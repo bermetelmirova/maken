@@ -35,7 +35,7 @@ public class ListConverter implements BaseConverter<ListModel, List> {
                 .ID(list.getId())
                 .name(list.getName())
                 .dashboardId(list.getDashboard().getId())
-                .statusId(list.getStatus().getId())
+                .statusId(list.getStatus() != null ? list.getStatus().getId() : null)
                 .build();
     }
 }

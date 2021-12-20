@@ -5,7 +5,6 @@ import kg.academy.maken.converter.ListNameUpdateConverter;
 import kg.academy.maken.converter.ListUpdateStatusConverter;
 import kg.academy.maken.entity.Dashboard;
 import kg.academy.maken.entity.List;
-import kg.academy.maken.entity.User;
 import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.list_model.ListGetModel;
 import kg.academy.maken.model.list_model.ListModel;
@@ -20,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -104,28 +101,25 @@ public class ListServiceImpl implements ListService {
     @Override
     public Boolean isListExist(String name) {
         List list = listRepository.findByName(name).orElse(null);
-        if (list != null)
-            return true;
-        return false;
+        return list != null;
     }
 
     @Override
     public ListModel saveModel(ListModel model) {
         List list = listConverter.convertToEntity(model);
-        if (isListExist(model.getName()))
+        boolean isExist = isListExist(model.getName());
+        if (Boolean.TRUE.equals(isExist)) {
             throw new ApiException("Такой лист уже существует!", HttpStatus.BAD_REQUEST);
-        listRepository.save(list);
-        return listConverter.convertToModel(list);
+        } else {
+            listRepository.save(list);
+            return listConverter.convertToModel(list);
+        }
     }
 
     @Override
     public ListModel deleteModelById(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User user = userService.getByLogin(userName);
         List list = findById(id);
-        if (!memberService.isAdmin(user, list.getDashboard().getId()))
-            throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
+        memberService.isAdmin(list.getDashboard().getId());
         return listConverter.convertToModel(deleteById(id));
     }
 

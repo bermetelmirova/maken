@@ -2,7 +2,6 @@ package kg.academy.maken.converter;
 
 import kg.academy.maken.entity.Card;
 import kg.academy.maken.model.card_model.CardPostModel;
-import kg.academy.maken.repository.ListRepository;
 import kg.academy.maken.service.LabelService;
 
 import kg.academy.maken.service.ListService;
@@ -22,7 +21,6 @@ public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
     @Override
     public CardPostModel convertToModel(Card card) {
         if (card == null) return null;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return CardPostModel.builder()
                 .ID(card.getId())
                 .name(card.getName())
@@ -30,7 +28,7 @@ public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
                 .description(card.getDescription())
                 .adminRating(card.getAdminRating())
                 .listId(card.getList().getId())
-                .labelId(card.getLabel().getId())
+                .labelId(card.getLabel()!=null ? card.getLabel().getId():null)
                 .build();
     }
 
@@ -44,7 +42,7 @@ public class CardPostConverter implements BaseConverter<CardPostModel, Card> {
                 .adminRating(cardPostModel.getAdminRating())
                 .deadline(LocalDateTime.parse(cardPostModel.getDeadline(), dateTimeFormatter))
                 .list(listService.findById(cardPostModel.getListId()))
-                .label(labelService.findById(cardPostModel.getLabelId()))
+                .label(cardPostModel.getLabelId() != null ? labelService.findById(cardPostModel.getLabelId()) : null)
                 .build();
     }
 }

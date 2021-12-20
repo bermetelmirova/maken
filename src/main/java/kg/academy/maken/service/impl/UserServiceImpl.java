@@ -1,6 +1,7 @@
 package kg.academy.maken.service.impl;
 
 import kg.academy.maken.converter.UserConverter;
+import kg.academy.maken.converter.UserTokenModelConverter;
 import kg.academy.maken.entity.User;
 import kg.academy.maken.entity.UserRole;
 import kg.academy.maken.exception.ApiException;
@@ -28,12 +29,13 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
+    private final UserTokenModelConverter userTokenModelConverter;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final UserRoleService userRoleService;
 
     @Override
-    public String saveModel(UserModel userModel) {
+    public UserTokenModel saveModel(UserModel userModel) {
         User checkLogin = userRepository.findByLogin(userModel.getLogin()).orElse(null);
         if (checkLogin != null)
             throw new ApiException("Такой пользователь уже есть!", HttpStatus.BAD_REQUEST);
@@ -48,7 +50,10 @@ public class UserServiceImpl implements UserService {
         userRoleService.save(userRole);
 
         String loginPasswordPair = userModel.getLogin() + ":" + userModel.getPassword();
-        return "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
+        String token = "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
+        UserTokenModel userTokenModel = userTokenModelConverter.convertToModel(user);
+        userTokenModel.setToken(token);
+        return userTokenModel;
     }
 
     @Override
@@ -145,14 +150,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getAuthorisationToken(UserAuthModel userModel) {
+    public UserTokenModel getAuthorisationToken(UserAuthModel userModel) {
         User user = userRepository.findByLogin(userModel.getLogin()).orElseThrow(() -> new IllegalArgumentException("Такого user'а нет!"));
         boolean isMatches = passwordEncoder.matches(userModel.getPassword(), user.getPassword());
         if (!isMatches) {
             throw new ApiException("Неверный пароль или логин!", HttpStatus.BAD_REQUEST);
         }
         String loginPasswordPair = userModel.getLogin() + ":" + userModel.getPassword();
-        return "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
+        String token = "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
+        UserTokenModel userTokenModel = userTokenModelConverter.convertToModel(user);
+        userTokenModel.setToken(token);
+        return userTokenModel;
     }
 
     @Override
@@ -162,5 +170,11 @@ public class UserServiceImpl implements UserService {
         if (userPage.getContent().isEmpty())
             throw new ApiException("Список пустой", HttpStatus.BAD_REQUEST);
         return userPage;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return getByLogin(userName);
     }
 }

@@ -1,6 +1,8 @@
 package kg.academy.maken.entity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -13,10 +15,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 
 public class List extends BaseEntity {
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "dashboard_id", nullable = false)
     private Dashboard dashboard;
 

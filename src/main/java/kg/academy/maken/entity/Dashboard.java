@@ -15,8 +15,4 @@ import javax.persistence.*;
 public class Dashboard extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private Image background;
 }

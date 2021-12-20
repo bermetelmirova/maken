@@ -21,8 +21,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseMessage<String> save(@RequestBody UserModel userModel) {
-        return new ResponseMessage<String>().prepareSuccessMessage(userService.saveModel(userModel));
+    public ResponseMessage<UserTokenModel> save(@RequestBody UserModel userModel) {
+        return new ResponseMessage<UserTokenModel>().prepareSuccessMessage(userService.saveModel(userModel));
     }
 
     @GetMapping("/{id}")
@@ -40,9 +40,9 @@ public class UserController {
         return userService.searchUser(userSearch, pageable);
     }
 
-    @PostMapping("/sign-up")
-    public ResponseMessage<String> signUp(@RequestBody UserAuthModel userAuthModel) {
-        return new ResponseMessage<String>().prepareSuccessMessage(userService.getAuthorisationToken(userAuthModel));
+    @PostMapping("/sign-in")
+    public ResponseMessage<UserTokenModel> signIn(@RequestBody UserAuthModel userAuthModel) {
+        return new ResponseMessage<UserTokenModel>().prepareSuccessMessage(userService.getAuthorisationToken(userAuthModel));
     }
 
     @PutMapping()
