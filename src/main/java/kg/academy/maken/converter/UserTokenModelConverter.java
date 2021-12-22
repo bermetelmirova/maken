@@ -10,7 +10,7 @@ public class UserTokenModelConverter implements BaseConverter<UserTokenModel, Us
     public User convertToEntity(UserTokenModel userTokenModel) {
         return User.builder()
                 .login(userTokenModel.getLogin())
-                .telegram(userTokenModel.getTelegram())
+                .email(userTokenModel.getEmail())
                 .build();
     }
 
@@ -20,7 +20,7 @@ public class UserTokenModelConverter implements BaseConverter<UserTokenModel, Us
                 .id(user.getId())
                 .login(user.getLogin())
                 .password(user.getPassword())
-                .telegram(user.getTelegram())
+                .email(user.getEmail())
                 .build();
     }
 }

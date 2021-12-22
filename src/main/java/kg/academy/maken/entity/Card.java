@@ -28,6 +28,9 @@ public class Card extends BaseEntity {
     @Column(name = "admin_rating")
     private Double adminRating;
 
+    @Column(name = "finish_time")
+    private LocalDateTime finishTime;
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "list_id", nullable = false)
@@ -37,4 +40,9 @@ public class Card extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "label_id")
     private Label label;
+
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "status_id")
+    private Status status;
 }

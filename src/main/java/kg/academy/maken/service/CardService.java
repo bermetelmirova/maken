@@ -26,4 +26,14 @@ public interface CardService extends BaseService<Card>, BaseModelService<CardPos
     CardGetModel getCard(Long id);
 
     Page<CardModel> getPage(Pageable pageable);
+
+    List<Card> getDoneCards();
+
+    Boolean sendMail(CommentModel commentModel);
+
+    Boolean sendMail(CardMemberModel cardMemberModel);
+
+    Boolean sendMail(CardPostModel cardPostModel);
+
+    Boolean sendMail(CardRatingModel cardRatingModel);
 }

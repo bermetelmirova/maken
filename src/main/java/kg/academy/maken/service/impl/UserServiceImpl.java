@@ -1,5 +1,6 @@
 package kg.academy.maken.service.impl;
 
+import kg.academy.maken.aop.Mail;
 import kg.academy.maken.converter.UserConverter;
 import kg.academy.maken.converter.UserTokenModelConverter;
 import kg.academy.maken.entity.User;
@@ -7,11 +8,13 @@ import kg.academy.maken.entity.UserRole;
 import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.user_model.*;
 import kg.academy.maken.repository.UserRepository;
+import kg.academy.maken.service.MailService;
 import kg.academy.maken.service.RoleService;
 import kg.academy.maken.service.UserRoleService;
 import kg.academy.maken.service.UserService;
 import kg.academy.maken.specification.UserSpecification;
-import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,16 +28,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final UserConverter userConverter;
-    private final UserTokenModelConverter userTokenModelConverter;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
-    private final UserRoleService userRoleService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserConverter userConverter;
+    @Autowired
+    private UserTokenModelConverter userTokenModelConverter;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private MailService mailService;
+
 
     @Override
+    @Mail(message = "user")
     public UserTokenModel saveModel(UserModel userModel) {
         User checkLogin = userRepository.findByLogin(userModel.getLogin()).orElse(null);
         if (checkLogin != null)
@@ -44,10 +57,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         userRepository.save(user);
 
+
         UserRole userRole = new UserRole();
         userRole.setUser(user);
         userRole.setRole(roleService.findById(1L));
         userRoleService.save(userRole);
+
 
         String loginPasswordPair = userModel.getLogin() + ":" + userModel.getPassword();
         String token = "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
@@ -90,8 +105,8 @@ public class UserServiceImpl implements UserService {
             user.setLogin(userModel.getLogin());
         if (userModel.getPassword() != null)
             user.setPassword(passwordEncoder.encode(userModel.getPassword()));
-        if (userModel.getTelegram() != null)
-            user.setTelegram(userModel.getTelegram());
+        if (userModel.getEmail() != null)
+            user.setEmail(userModel.getEmail());
         userRepository.save(user);
         return userConverter.convertToModel(user);
     }

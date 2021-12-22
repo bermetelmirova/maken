@@ -13,7 +13,7 @@ public class UserConverter implements BaseConverter<UserModel, User> {
         return UserModel.builder()
                 .id(user.getId())
                 .login(user.getLogin())
-                .telegram(user.getTelegram())
+                .email(user.getEmail())
                 .password(user.getPassword())
 //                .image(user.getImage().getId())
                 .build();
@@ -24,7 +24,7 @@ public class UserConverter implements BaseConverter<UserModel, User> {
         if (userModel == null) return null;
         return User.builder()
                 .login(userModel.getLogin())
-                .telegram(userModel.getTelegram())
+                .email(userModel.getEmail())
                 .password(userModel.getPassword())
                 .build();
     }

@@ -16,4 +16,5 @@ public interface CardMemberRepository extends JpaRepository<CardMember, Long> {
 
     @Query(value = "select * from card_members where card_id = :c_id and member_id =:m_id", nativeQuery = true)
     Optional<CardMember> findByCardAndDashboardMember(@Param("c_id") Long cardId, @Param("m_id") Long userID);
+
 }

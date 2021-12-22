@@ -12,7 +12,7 @@ public class UserTokenModel {
     private String token;
     private Long id;
     private String login;
-    private String telegram;
+    private String email;
     private String password;
     private Long image;
 }
