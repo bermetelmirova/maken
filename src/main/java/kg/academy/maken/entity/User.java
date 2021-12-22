@@ -16,7 +16,7 @@ public class User extends BaseEntity {
     @Column(name = "login", nullable = false, unique = true)
     private String login;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)
