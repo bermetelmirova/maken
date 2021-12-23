@@ -43,7 +43,7 @@ public class MailAspect {
 
             switch (mail.message()) {
                 case "comment":
-                    CommentModel commentModel = (CommentModel) argument[1];
+                    CommentModel commentModel = (CommentModel) argument[0];
                     cardService.sendMail(commentModel);
                     break;
                 case "user":

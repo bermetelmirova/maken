@@ -20,11 +20,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     @Query(value = "select * from cards where status_id = 3", nativeQuery = true)
     List<Card> getDoneCards();
 
-    @Query(value = "select u.email from cards c join card_members cm on cm.id=:id join members m " +
-            "on cm.member_id = m.user_id  join users u on u.id = m.user_id where cm.card_id = :id", nativeQuery = true)
+    @Query(value = "select u.email from card_members cm  join members m on cm.member_id = m.id" +
+            " join users u on u.id = m.user_id where cm.card_id = :id", nativeQuery = true)
     Optional<List<String>> getEmails(@Param("id") Long id);
 
-    @Query(value = "select u.email from card_members cm join members m " +
-            "on cm.member_id = m.user_id join users u on u.id = m.user_id where cm.card_id = :id", nativeQuery = true)
+    @Query(value = "select u.email from  members m join users u on m.user_id = u.id where m.id = :id", nativeQuery = true)
     Optional<String> getEmailOfAddUser(@Param("id") Long id);
 }

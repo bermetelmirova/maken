@@ -224,7 +224,7 @@ public class CardServiceImpl implements CardService {
         Card card = findById(commentModel.getCardId());
         String message = "На вашу карточку " + card.getName() + " написали комментарий";
         String subject = "MAKEN";
-        List<String> emails = cardRepository.getEmails(card.getId())
+        List<String> emails = cardRepository.getEmails(commentModel.getCardId())
                 .orElseThrow(()-> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
         for (int i = 0; i < emails.size(); i++) {
             f = mailService.send(emails.get(i), subject, message);
@@ -237,7 +237,7 @@ public class CardServiceImpl implements CardService {
         Card card = findById(cardMemberModel.getCardId());
         String message = "Вас добавили карточку " + card.getName() + " для выполнения задачи";
         String subject = "MAKEN";
-        String email = cardRepository.getEmailOfAddUser(card.getId())
+        String email = cardRepository.getEmailOfAddUser(cardMemberModel.getDashboardMemberId())
                 .orElseThrow(()-> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
         return   mailService.send(email, subject, message);
     }

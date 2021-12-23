@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/member").hasRole("USER")
 
-                .anyRequest().permitAll()
+//                .anyRequest().permitAll()
                 .and()
                 .httpBasic();
     }
