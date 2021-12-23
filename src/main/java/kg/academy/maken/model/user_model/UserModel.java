@@ -13,5 +13,5 @@ public class UserModel {
     private String login;
     private String email;
     private String password;
-    private Long image;
+    private String image;
 }

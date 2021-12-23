@@ -4,6 +4,7 @@ import kg.academy.maken.entity.User;
 import kg.academy.maken.model.user_model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,5 +29,7 @@ public interface UserService extends BaseService<User> {
 
     Page<User> searchUser(UserSearch userSearch, Pageable pageable);
 
-    User  getCurrentUser();
+    User getCurrentUser();
+
+    UserModel setImage(MultipartFile multipartFile);
 }

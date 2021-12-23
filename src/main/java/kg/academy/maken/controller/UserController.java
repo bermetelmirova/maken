@@ -8,6 +8,7 @@ import kg.academy.maken.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,6 +49,11 @@ public class UserController {
     @PutMapping()
     public ResponseMessage<UserModel> update(@RequestBody UserModel userModel) {
         return new ResponseMessage<UserModel>().prepareSuccessMessage(userService.updateModel(userModel));
+    }
+
+    @PutMapping("/update-image")
+    public ResponseMessage<UserModel> setImage(@RequestParam(name = "file") MultipartFile multipartFile) {
+        return new ResponseMessage<UserModel>().prepareSuccessMessage(userService.setImage(multipartFile));
     }
 
     @PutMapping("/update-name")

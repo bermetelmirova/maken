@@ -3,15 +3,13 @@ package kg.academy.maken.service.impl;
 import kg.academy.maken.aop.Mail;
 import kg.academy.maken.converter.UserConverter;
 import kg.academy.maken.converter.UserTokenModelConverter;
+import kg.academy.maken.entity.Image;
 import kg.academy.maken.entity.User;
 import kg.academy.maken.entity.UserRole;
 import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.user_model.*;
 import kg.academy.maken.repository.UserRepository;
-import kg.academy.maken.service.MailService;
-import kg.academy.maken.service.RoleService;
-import kg.academy.maken.service.UserRoleService;
-import kg.academy.maken.service.UserService;
+import kg.academy.maken.service.*;
 import kg.academy.maken.specification.UserSpecification;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Base64;
 import java.util.List;
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRoleService userRoleService;
     @Autowired
-    private MailService mailService;
+    private ImageService imageService;
 
 
     @Override
@@ -98,9 +97,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateModel(UserModel userModel) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User user = getByLogin(userName);
+        User user = getCurrentUser();
         if (userModel.getLogin() != null)
             user.setLogin(userModel.getLogin());
         if (userModel.getPassword() != null)
@@ -113,20 +110,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserNameUpdate updateModel(UserNameUpdate userUpdateModel) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User user = getByLogin(userName);
-        if (userUpdateModel.getLogin() != null)
+        User user = getCurrentUser();
+        if (userUpdateModel.getLogin() != null) {
+            User checkLogin = userRepository.findByLogin(userUpdateModel.getLogin()).orElse(null);
+            if (checkLogin != null)
+                throw new ApiException("Такой пользователь уже есть!", HttpStatus.BAD_REQUEST);
             user.setLogin(userUpdateModel.getLogin());
+        }
         userRepository.save(user);
         return userUpdateModel;
     }
 
     @Override
     public UserUpdatePasswordModel updateModel(UserUpdatePasswordModel userUpdatePasswordModel) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User user = getByLogin(userName);
+        User user = getCurrentUser();
         if (userUpdatePasswordModel != null)
             user.setPassword(passwordEncoder.encode(userUpdatePasswordModel.getPassword()));
         userRepository.save(user);
@@ -191,5 +188,13 @@ public class UserServiceImpl implements UserService {
     public User getCurrentUser() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByLogin(userName);
+    }
+
+    @Override
+    public UserModel setImage(MultipartFile multipartFile) {
+        User user = getCurrentUser();
+        Image image = imageService.saveImage(multipartFile);
+        user.setImage(image);
+        return userConverter.convertToModel(user);
     }
 }

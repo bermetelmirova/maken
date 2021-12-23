@@ -15,7 +15,7 @@ public class UserConverter implements BaseConverter<UserModel, User> {
                 .login(user.getLogin())
                 .email(user.getEmail())
                 .password(user.getPassword())
-//                .image(user.getImage().getId())
+                .image(user.getImage()!= null ? user.getImage().getImageUrl(): null)
                 .build();
     }
 
@@ -26,6 +26,7 @@ public class UserConverter implements BaseConverter<UserModel, User> {
                 .login(userModel.getLogin())
                 .email(userModel.getEmail())
                 .password(userModel.getPassword())
+
                 .build();
     }
 }
