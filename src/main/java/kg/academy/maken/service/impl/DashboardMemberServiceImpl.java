@@ -49,14 +49,16 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
         if (dashboardMember == null)
             throw new ApiException("Участник не найден!", HttpStatus.BAD_REQUEST);
         memberRepository.deleteById(id);
-        return findById(id);
+        return dashboardMember;
     }
 
     @Override
     public DashboardMemberModel addAdmin(DashboardMemberModel model) {
-        DashboardMember dashboardMember = findById(model.getDashboardId());
-        if (dashboardMember != null)
-            dashboardMember.setIsAdmin(true);
+        DashboardMember dashboardMember = memberRepository
+                .findByDashboardIdAndUserId(model.getDashboardId(), model.getUserId()).orElse(null);
+        if (dashboardMember == null)
+            throw new ApiException("Участник не найден!", HttpStatus.BAD_REQUEST);
+        dashboardMember.setIsAdmin(true);
         save(dashboardMember);
         return model;
     }
@@ -71,11 +73,10 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
 
     @Override
     public DashboardMemberModel removeMember(DashboardMemberModel model) {
-        User user = userService.findById(model.getUserId());
-        DashboardMember dashboardMember = memberRepository.findByDashboardIdAndUserId(model.getDashboardId(), user.getId()).orElse(null);
-        if (dashboardMember == null)
-            throw new ApiException("Участник не найден!", HttpStatus.BAD_REQUEST);
-        deleteById(dashboardMember.getId());
+        DashboardMember dashboardMember = memberRepository
+                .findByDashboardIdAndUserId(model.getDashboardId(), model.getUserId()).orElse(null);
+        if (dashboardMember != null)
+            deleteById(dashboardMember.getId());
         return model;
     }
 
@@ -96,7 +97,7 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
         if (dashboardMember == null)
             throw new ApiException("На доске нет такого участника", HttpStatus.NO_CONTENT);
         boolean isAdmin = dashboardMember.getIsAdmin();
-        if(!isAdmin)
+        if (!isAdmin)
             throw new ApiException("Пользователь не является админом!", HttpStatus.FORBIDDEN);
     }
 }

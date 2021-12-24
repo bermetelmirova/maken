@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import kg.academy.maken.entity.Image;
 import kg.academy.maken.repository.ImageRepository;
 import kg.academy.maken.service.ImageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class ImageServiceImpl implements ImageService {
     private static final String CLOUDINARY_URL = "cloudinary://513634983379558:egniiuYsUyUDCW9FuFvA982uAuE@dh7tacgyi";
     @Autowired
@@ -38,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
             Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
             return ((String) uploadResult.get("url"));
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return null;
         }
     }

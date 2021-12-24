@@ -1,7 +1,6 @@
 package kg.academy.maken.controller;
 
 import kg.academy.maken.model.ResponseMessage;
-import kg.academy.maken.model.list_model.ListGetModel;
 import kg.academy.maken.model.list_model.ListModel;
 import kg.academy.maken.model.list_model.ListNameUpdateModel;
 import kg.academy.maken.model.list_model.ListStatusUpdateModel;

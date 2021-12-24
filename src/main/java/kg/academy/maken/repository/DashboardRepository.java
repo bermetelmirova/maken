@@ -1,7 +1,6 @@
 package kg.academy.maken.repository;
 
 import kg.academy.maken.entity.Dashboard;
-import kg.academy.maken.entity.DashboardMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

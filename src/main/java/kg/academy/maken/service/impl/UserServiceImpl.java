@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -168,6 +168,10 @@ public class UserServiceImpl implements UserService {
         if (!isMatches) {
             throw new ApiException("Неверный пароль или логин!", HttpStatus.BAD_REQUEST);
         }
+        if (user.getIsActive().equals(0L)) {
+            user.setIsActive(1L);
+            save(user);
+        }
         String loginPasswordPair = userModel.getLogin() + ":" + userModel.getPassword();
         String token = "Basic " + new String(Base64.getEncoder().encode(loginPasswordPair.getBytes()));
         UserTokenModel userTokenModel = userTokenModelConverter.convertToModel(user);
@@ -195,6 +199,7 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser();
         Image image = imageService.saveImage(multipartFile);
         user.setImage(image);
+        save(user);
         return userConverter.convertToModel(user);
     }
 }
