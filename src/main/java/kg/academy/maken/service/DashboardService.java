@@ -13,4 +13,5 @@ public interface DashboardService extends BaseService<Dashboard>, BaseModelServi
     DashboardAddMemberModel addMember(DashboardAddMemberModel dashboardAddMemberModel);
     Page<DashboardModel> getPage(Pageable pageable);
     List<ListGetModel> getListByDashboard(Long id);
+    List<DashboardModel> getByUser();
 }

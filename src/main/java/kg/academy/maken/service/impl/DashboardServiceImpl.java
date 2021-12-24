@@ -108,6 +108,15 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
+    public List<DashboardModel> getByUser() {
+        User user = userService.getCurrentUser();
+        List<Dashboard> dashboards = dashboardRepository
+                .findByUser(user.getId()).orElseThrow(() -> new ApiException("У юзера нет досок", HttpStatus.NO_CONTENT));
+        return dashboards.stream().map(dashboardConverter::convertToModel)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public DashboardModel update(DashboardModel dashboardModel) {
         Dashboard dashboardForUpdate = findById(dashboardModel.getId());
         if (dashboardModel.getName() != null) dashboardForUpdate.setName(dashboardModel.getName());

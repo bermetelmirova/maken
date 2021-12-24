@@ -1,6 +1,8 @@
 package kg.academy.maken.repository;
 
+
 import kg.academy.maken.entity.DashboardMember;
+import kg.academy.maken.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +18,5 @@ public interface DashboardMemberRepository extends JpaRepository<DashboardMember
 
     @Query(value = "SELECT * FROM members WHERE dashboard_id = :dash_id ", nativeQuery = true)
     Optional<List<DashboardMember>> findByDashboard(@Param("dash_id") Long id);
+
 }

@@ -52,6 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "api/dashboard/pageable").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "api/dashboard/{id}").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "api/dashboard/get-all/{id}").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "api/dashboard/get-user-dashboards").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "api/dashboard").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "api/dashboard/add-member").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, "api/dashboard").hasRole("USER")

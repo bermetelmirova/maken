@@ -39,6 +39,10 @@ public class DashboardController {
         return dashboardService.getListByDashboard(id);
     }
 
+    @GetMapping("/get-user-dashboards")
+    public List<DashboardModel> getModelWithCard() {
+        return dashboardService.getByUser();
+    }
 
     @PostMapping
     public ResponseMessage<DashboardModel> save(@RequestBody DashboardModel dashboardModel) {
