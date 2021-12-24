@@ -258,7 +258,7 @@ public class CardServiceImpl implements CardService {
     public Boolean sendMail(CardSetRatingModel cardSetRatingModel) {
         Boolean f = false;
         Card card = findById(cardSetRatingModel.getCardId());
-        String message = "Вашу задачу: " + card.getName() + "приняли, вы получили оценку: " + cardSetRatingModel.getAdminRating();
+        String message = "Вашу задачу: " + card.getName() + " приняли, вы получили оценку: " + cardSetRatingModel.getAdminRating();
         String subject = "MAKEN  ";
         List<String> emails = cardRepository.getEmails(card.getId())
                 .orElseThrow(() -> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
