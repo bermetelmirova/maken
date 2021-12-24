@@ -32,4 +32,5 @@ public interface UserService extends BaseService<User> {
     User getCurrentUser();
 
     UserModel setImage(MultipartFile multipartFile);
+
 }

@@ -68,7 +68,7 @@ public class ListServiceImpl implements ListService {
                 .orElseThrow(() -> new ApiException("Список пуст", HttpStatus.NO_CONTENT));
         java.util.List<ListGetModel> listGetModels = new ArrayList<>();
         for (List value : list) {
-            listGetModels.add(new ListGetModel(value.getId(), cardService.getCardsByList(value.getId())));
+            listGetModels.add(new ListGetModel(value.getId(), value.getName(), cardService.getCardsByList(value.getId())));
         }
         return listGetModels;
     }

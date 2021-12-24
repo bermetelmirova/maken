@@ -1,10 +1,7 @@
 package kg.academy.maken.service.impl;
 
 import kg.academy.maken.aop.Mail;
-import kg.academy.maken.converter.CardChangeListConverter;
-import kg.academy.maken.converter.CardGetConverter;
-import kg.academy.maken.converter.CardModelConverter;
-import kg.academy.maken.converter.CardPostConverter;
+import kg.academy.maken.converter.*;
 import kg.academy.maken.entity.*;
 import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.card_model.*;
@@ -49,9 +46,10 @@ public class CardServiceImpl implements CardService {
     private DashboardMemberService memberService;
     @Autowired
     private UserService userService;
-
     @Autowired
     private MailService mailService;
+    @Autowired
+    private CardRatingConverter cardRatingConverter;
 
     @Override
     public Card save(Card card) {
@@ -97,7 +95,7 @@ public class CardServiceImpl implements CardService {
         if (list == null || card == null)
             throw new ApiException("Указаны не существующие данные", HttpStatus.BAD_REQUEST);
         else {
-            if(Objects.equals(list.getStatus().getName(), "DONE")){
+            if (Objects.equals(list.getStatus().getName(), "DONE")) {
                 card.setStatus(list.getStatus());
                 card.setFinishTime(LocalDateTime.now());
             }
@@ -158,7 +156,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Mail(message = "rating")
-    public CardRatingModel acceptTask(CardRatingModel cardModel) {
+    public CardSetRatingModel acceptTask(CardSetRatingModel cardModel) {
         Card card = findById(cardModel.getCardId());
         if (cardModel.getAdminRating() < 0)
             throw new ApiException("Оценка меньше нуля", HttpStatus.BAD_REQUEST);
@@ -225,7 +223,7 @@ public class CardServiceImpl implements CardService {
         String message = "На вашу карточку " + card.getName() + " написали комментарий";
         String subject = "MAKEN";
         List<String> emails = cardRepository.getEmails(commentModel.getCardId())
-                .orElseThrow(()-> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
         for (int i = 0; i < emails.size(); i++) {
             f = mailService.send(emails.get(i), subject, message);
         }
@@ -238,8 +236,8 @@ public class CardServiceImpl implements CardService {
         String message = "Вас добавили карточку " + card.getName() + " для выполнения задачи";
         String subject = "MAKEN";
         String email = cardRepository.getEmailOfAddUser(cardMemberModel.getDashboardMemberId())
-                .orElseThrow(()-> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
-        return   mailService.send(email, subject, message);
+                .orElseThrow(() -> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
+        return mailService.send(email, subject, message);
     }
 
     @Override
@@ -249,7 +247,7 @@ public class CardServiceImpl implements CardService {
         String message = "Вашу задачу: " + card.getName() + " не приняли";
         String subject = "MAKEN ";
         List<String> emails = cardRepository.getEmails(card.getId())
-                .orElseThrow(()-> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
         for (int i = 0; i < emails.size(); i++) {
             f = mailService.send(emails.get(i), subject, message);
         }
@@ -257,17 +255,23 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Boolean sendMail(CardRatingModel cardRatingModel) {
+    public Boolean sendMail(CardSetRatingModel cardSetRatingModel) {
         Boolean f = false;
-        Card card = findById(cardRatingModel.getCardId());
-        String message = "Вашу задачу: " + card.getName() + "приняли, вы получили оценку: " + cardRatingModel.getAdminRating();
+        Card card = findById(cardSetRatingModel.getCardId());
+        String message = "Вашу задачу: " + card.getName() + "приняли, вы получили оценку: " + cardSetRatingModel.getAdminRating();
         String subject = "MAKEN  ";
         List<String> emails = cardRepository.getEmails(card.getId())
-                .orElseThrow(()-> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ApiException("В листе нет отмеченных участников", HttpStatus.BAD_REQUEST));
         for (int i = 0; i < emails.size(); i++) {
             f = mailService.send(emails.get(i), subject, message);
         }
         return f;
+    }
+
+    @Override
+    public List<CardRatingModel> getRating() {
+        List<Card> cards = cardRepository.getRatingCards().orElseThrow(() -> new ApiException("Список пуст", HttpStatus.NO_CONTENT));
+        return cards.stream().map(cardRatingConverter::convertToModel).collect(Collectors.toList());
     }
 
     @Override

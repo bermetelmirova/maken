@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         if (checkLogin != null)
             throw new ApiException("Такой пользователь уже есть!", HttpStatus.BAD_REQUEST);
         User user = userConverter.convertToEntity(userModel);
-        user.setIsActive(1L);
+        user.setIsActive(0L);
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         userRepository.save(user);
 

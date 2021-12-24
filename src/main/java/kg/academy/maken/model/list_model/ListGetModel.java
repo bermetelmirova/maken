@@ -12,5 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ListGetModel {
     private Long id;
+    private String name;
     private List<CardModel> cardModels;
 }

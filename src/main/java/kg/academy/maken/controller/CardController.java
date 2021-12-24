@@ -33,7 +33,7 @@ public class CardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseMessage<CardPostModel> getById(@PathVariable Long id){
+    public ResponseMessage<CardPostModel> getById(@PathVariable Long id) {
         return new ResponseMessage<CardPostModel>().prepareSuccessMessage(cardService.getModelById(id));
     }
 
@@ -53,38 +53,43 @@ public class CardController {
     }
 
     @GetMapping("/get-all/pageable")
-    public Page<CardModel>  getPage(Pageable pageable){
-        return  cardService.getPage(pageable);
+    public Page<CardModel> getPage(Pageable pageable) {
+        return cardService.getPage(pageable);
+    }
+
+    @GetMapping("/get-rating")
+    public List<CardRatingModel> getRating() {
+        return cardService.getRating();
     }
 
     @PutMapping("/move-card")
-    public ResponseMessage<CardChangeListModel> moveCard(@RequestBody CardChangeListModel cardChangeListModel){
-        return  new ResponseMessage<CardChangeListModel>()
+    public ResponseMessage<CardChangeListModel> moveCard(@RequestBody CardChangeListModel cardChangeListModel) {
+        return new ResponseMessage<CardChangeListModel>()
                 .prepareSuccessMessage(cardService.changeList(cardChangeListModel));
     }
 
     @PutMapping("/reject-task")
-    public ResponseMessage<CardPostModel> rejectTask(@RequestBody CardPostModel cardPostModel){
+    public ResponseMessage<CardPostModel> rejectTask(@RequestBody CardPostModel cardPostModel) {
         return new ResponseMessage<CardPostModel>().prepareSuccessMessage(cardService.rejectTask(cardPostModel));
     }
 
     @PutMapping("/accept-task")
-    public ResponseMessage<CardRatingModel> acceptCard(@RequestBody CardRatingModel cardRatingModel){
-        return  new ResponseMessage<CardRatingModel>().prepareSuccessMessage(cardService.acceptTask(cardRatingModel));
+    public ResponseMessage<CardSetRatingModel> acceptCard(@RequestBody CardSetRatingModel cardSetRatingModel) {
+        return new ResponseMessage<CardSetRatingModel>().prepareSuccessMessage(cardService.acceptTask(cardSetRatingModel));
     }
 
     @PutMapping("/update-card")
-    public ResponseMessage<CardPostModel> update(@RequestBody CardPostModel cardPostModel){
+    public ResponseMessage<CardPostModel> update(@RequestBody CardPostModel cardPostModel) {
         return new ResponseMessage<CardPostModel>().prepareSuccessMessage(cardService.update(cardPostModel));
     }
 
     @DeleteMapping("/{id}")
-    public  ResponseMessage<CardPostModel> deleteById(@PathVariable Long id){
+    public ResponseMessage<CardPostModel> deleteById(@PathVariable Long id) {
         return new ResponseMessage<CardPostModel>().prepareSuccessMessage(cardService.deleteModelById(id));
     }
 
     @DeleteMapping("/remove-member-card")
-    public ResponseMessage<CardMemberModel> removeMember(@RequestBody CardMemberModel cardMemberModel){
+    public ResponseMessage<CardMemberModel> removeMember(@RequestBody CardMemberModel cardMemberModel) {
         return new ResponseMessage<CardMemberModel>().prepareSuccessMessage(cardService.removeMember(cardMemberModel));
     }
 }

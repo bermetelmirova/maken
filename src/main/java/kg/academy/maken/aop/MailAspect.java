@@ -1,17 +1,13 @@
 package kg.academy.maken.aop;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kg.academy.maken.model.card_model.CardMemberModel;
 import kg.academy.maken.model.card_model.CardPostModel;
-import kg.academy.maken.model.card_model.CardRatingModel;
+import kg.academy.maken.model.card_model.CardSetRatingModel;
 import kg.academy.maken.model.commment_model.CommentModel;
-import kg.academy.maken.model.user_model.UserModel;
 import kg.academy.maken.model.user_model.UserTokenModel;
 import kg.academy.maken.service.CardService;
 import kg.academy.maken.service.MailService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,7 +19,6 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Component
-@RequiredArgsConstructor
 @Slf4j
 
 public class MailAspect {
@@ -48,11 +43,11 @@ public class MailAspect {
                     break;
                 case "user":
                     UserTokenModel userModel = (UserTokenModel) methodResult;
-                    mailService.send(userModel.getEmail(), "Maken","ссылка" + userModel.getToken());
+                    mailService.send(userModel.getEmail(), "Maken","https://maken-task.herokuapp.com/sign-in");
                     break;
                 case "rating":
-                    CardRatingModel cardRatingModel = (CardRatingModel) argument[0];
-                    cardService.sendMail(cardRatingModel);
+                    CardSetRatingModel cardSetRatingModel = (CardSetRatingModel) argument[0];
+                    cardService.sendMail(cardSetRatingModel);
                     break;
                 case "reject":
                     CardPostModel cardPostModel = (CardPostModel) argument[0];

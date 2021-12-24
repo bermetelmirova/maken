@@ -8,8 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CardRatingModel {
-    private Long id;
-    private String name;
+public class CardSetRatingModel {
+    private Long cardId;
     private Double adminRating;
 }

@@ -21,7 +21,7 @@ public interface CardService extends BaseService<Card>, BaseModelService<CardPos
 
     CardPostModel rejectTask(CardPostModel cardModel);
 
-    CardRatingModel acceptTask(CardRatingModel cardModel);
+    CardSetRatingModel acceptTask(CardSetRatingModel cardModel);
 
     CardGetModel getCard(Long id);
 
@@ -35,5 +35,7 @@ public interface CardService extends BaseService<Card>, BaseModelService<CardPos
 
     Boolean sendMail(CardPostModel cardPostModel);
 
-    Boolean sendMail(CardRatingModel cardRatingModel);
+    Boolean sendMail(CardSetRatingModel cardSetRatingModel);
+
+    List<CardRatingModel> getRating();
 }

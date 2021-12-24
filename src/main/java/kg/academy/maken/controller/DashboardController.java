@@ -3,6 +3,7 @@ package kg.academy.maken.controller;
 import kg.academy.maken.model.ResponseMessage;
 import kg.academy.maken.model.dashboard_model.DashboardAddMemberModel;
 import kg.academy.maken.model.dashboard_model.DashboardModel;
+import kg.academy.maken.model.list_model.ListGetModel;
 import kg.academy.maken.service.DashboardService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class DashboardController {
     public ResponseMessage<DashboardModel> getById(@PathVariable Long id) {
         return new ResponseMessage<DashboardModel>().prepareSuccessMessage(dashboardService.getModelById(id));
     }
+
+    @GetMapping("/get-all/{id}")
+    public List<ListGetModel> getModelWithCard(@PathVariable Long id) {
+        return dashboardService.getListByDashboard(id);
+    }
+
 
     @PostMapping
     public ResponseMessage<DashboardModel> save(@RequestBody DashboardModel dashboardModel) {

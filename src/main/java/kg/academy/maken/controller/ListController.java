@@ -26,11 +26,6 @@ public class ListController {
         return new ResponseMessage<ListModel>().prepareSuccessMessage(listService.saveModel(listModel));
     }
 
-    @GetMapping("/get-all/{id}")
-    public List<ListGetModel> getModelWithCard(@PathVariable Long id) {
-        return listService.getListByDashboard(id);
-    }
-
     @GetMapping("/get-all")
     public List<ListModel> getAll() {
         return listService.getAllModel();

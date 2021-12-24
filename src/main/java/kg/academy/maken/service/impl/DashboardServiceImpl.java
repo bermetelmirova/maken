@@ -7,6 +7,7 @@ import kg.academy.maken.entity.User;
 import kg.academy.maken.exception.ApiException;
 import kg.academy.maken.model.dashboard_model.DashboardAddMemberModel;
 import kg.academy.maken.model.dashboard_model.DashboardModel;
+import kg.academy.maken.model.list_model.ListGetModel;
 import kg.academy.maken.repository.DashboardRepository;
 import kg.academy.maken.service.DashboardMemberService;
 import kg.academy.maken.service.DashboardService;
@@ -99,6 +100,11 @@ public class DashboardServiceImpl implements DashboardService {
         Page<Dashboard> dashboards = dashboardRepository.findAll(pageable);
         return dashboards
                 .map(dashboardConverter::convertToModel);
+    }
+
+    @Override
+    public List<ListGetModel> getListByDashboard(Long id) {
+        return listService.getListByDashboard(id);
     }
 
     @Override
