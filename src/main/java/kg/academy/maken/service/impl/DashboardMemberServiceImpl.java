@@ -56,6 +56,7 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
     public DashboardMemberModel addAdmin(DashboardMemberModel model) {
         DashboardMember dashboardMember = memberRepository
                 .findByDashboardIdAndUserId(model.getDashboardId(), model.getUserId()).orElse(null);
+        isAdmin(model.getDashboardId());
         if (dashboardMember == null)
             throw new ApiException("Участник не найден!", HttpStatus.BAD_REQUEST);
         dashboardMember.setIsAdmin(true);
@@ -66,6 +67,7 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
     @Override
     public DashboardMemberModel removeAdmin(DashboardMemberModel model) {
         DashboardMember dashboardMember = findById(model.getDashboardId());
+        isAdmin(model.getDashboardId());
         if (dashboardMember != null) dashboardMember.setIsAdmin(false);
         save(dashboardMember);
         return model;
@@ -75,6 +77,7 @@ public class DashboardMemberServiceImpl implements DashboardMemberService {
     public DashboardMemberModel removeMember(DashboardMemberModel model) {
         DashboardMember dashboardMember = memberRepository
                 .findByDashboardIdAndUserId(model.getDashboardId(), model.getUserId()).orElse(null);
+        isAdmin(model.getDashboardId());
         if (dashboardMember != null)
             deleteById(dashboardMember.getId());
         return model;
